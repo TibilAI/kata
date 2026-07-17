@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | My Profile</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page profile-page">
+    <main class="app-shell">
+      <section class="profile-screen" aria-labelledby="page-title">
+        <header class="journey-header profile-header">
+          <a class="back-button" href="s02-my-practice.html" aria-label="Back to My Practice"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div><h1 id="page-title">My Profile</h1><p>Your starting point. Your commitment.</p><span class="journey-rule" aria-hidden="true"></span></div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <section class="profile-card" aria-label="Profile summary">
+          <a class="profile-edit-all" href="s01-kata.html?mode=profile&from=s10" aria-label="Edit profile"><img src="../style/icons/icon-profile-edit.png" alt=""></a>
+          <article class="profile-row" id="profile-name"><img src="../style/icons/icon-profile.png" alt="" class="profile-art"><div><h2>Name</h2><p data-profile-name>Not set</p></div></article>
+          <article class="profile-row" id="profile-work"><img src="../style/icons/icon-work.png" alt="" class="profile-art"><div><h2>What kind of work do I do?</h2><span class="profile-hint">(e.g., build, sell, design, operate)</span><p data-profile-work>Not set</p></div></article>
+          <article class="profile-row profile-timing-row" id="profile-timing"><img src="../style/icons/icon-timing.png" alt="" class="profile-art"><div><h2>When will I do my Daily Kata?</h2><p data-profile-timing>Not set</p></div></article>
+          <section class="profile-commitment"><img src="../style/icons/icon-profile-commitment.png" alt=""><div><h2>A small commitment</h2><p>I will use this for the next 21 days.</p><strong data-profile-commitment>Not set</strong></div></section>
+        </section>
+
+        <a class="password-row" href="s12-change-password.html"><img src="../style/icons/icon-profile-lock.png" alt=""><span>Change Password</span><img src="../style/icons/icon-profile-chevron.png" alt=""></a>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-gray.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata-gray.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link active more-active nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more-blue.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

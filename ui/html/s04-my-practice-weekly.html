@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | Weekly Practice</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page reflection-page weekly-page">
+    <main class="app-shell">
+      <section class="reflection-screen" aria-labelledby="page-title">
+        <header class="reflection-header">
+          <a class="back-button" href="s02-my-practice.html" aria-label="Back to My Practice"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div>
+            <h1 id="page-title">Weekly Practice</h1>
+            <label class="date-picker-label"><img class="date-icon" src="../style/icons/icon-calendar.png" alt=""><input id="weekly-date" type="week" aria-label="Practice week"></label>
+            <span class="header-rule weekly-rule" aria-hidden="true"></span>
+          </div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <form id="weekly-kata-form" class="reflection-form weekly-form">
+          <section class="weekly-section" aria-labelledby="week-review-title">
+            <h2 id="week-review-title">What did I really do this week?</h2>
+            <div class="reflection-question">
+              <label for="avoid-thinking">1. Where did I avoid thinking?</label>
+              <p>(rushed, guessed, followed blindly)</p>
+              <textarea id="avoid-thinking" name="avoidThinking" rows="3"></textarea>
+            </div>
+            <div class="reflection-question">
+              <label for="real-value">2. Where did I create real value?</label>
+              <p>(clear thinking, good decisions, meaningful impact)</p>
+              <textarea id="real-value" name="realValue" rows="3"></textarea>
+            </div>
+            <div class="reflection-question">
+              <label for="patterns">3. What patterns do I notice?</label>
+              <textarea id="patterns" name="patterns" rows="2"></textarea>
+            </div>
+          </section>
+
+          <section class="weekly-section upgrade-section" aria-labelledby="upgrade-title">
+            <h2 id="upgrade-title">Upgrade for next week</h2>
+            <fieldset class="improvement-list">
+              <legend>1. Where do I need to improve most? <em>(Select all that apply)</em></legend>
+              <label><input type="checkbox" name="understandingProblems"> <span>Understanding problems</span></label>
+              <label><input type="checkbox" name="makingDecisions"> <span>Making decisions</span></label>
+              <label><input type="checkbox" name="creatingImpact"> <span>Creating impact</span></label>
+              <label><input type="checkbox" name="learningOutcomes"> <span>Learning from outcomes</span></label>
+            </fieldset>
+            <div class="reflection-question single-line-question">
+              <label for="specific-action">2. One specific action I will take:</label>
+              <textarea id="specific-action" name="specificAction" rows="1"></textarea>
+            </div>
+            <div class="reflection-question">
+              <label for="next-task">3. What will I do differently in my next task?</label>
+              <textarea id="next-task" name="nextTask" rows="3"></textarea>
+            </div>
+          </section>
+
+          <fieldset class="reality-check">
+            <legend>Reality Check</legend>
+            <p>Will I actually do this?</p>
+            <div>
+              <label><input type="radio" name="reality" value="Yes"> <span>Yes</span></label>
+              <label><input type="radio" name="reality" value="No"> <span>No (then simplify it)</span></label>
+            </div>
+          </fieldset>
+
+          <p class="form-message" id="weekly-message" aria-live="polite"></p>
+          <button class="continue-button complete-button weekly-complete" type="submit">Complete Weekly Practice <img class="button-icon" src="../style/icons/icon-complete-check.png" alt=""></button>
+        </form>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-orange.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

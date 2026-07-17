@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | Daily Practice</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page reflection-page">
+    <main class="app-shell">
+      <section class="reflection-screen" aria-labelledby="page-title">
+        <header class="reflection-header">
+          <a class="back-button" href="s02-my-practice.html" aria-label="Back to My Practice"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div>
+            <h1 id="page-title">Daily Practice</h1>
+            <label class="date-picker-label"><img class="date-icon" src="../style/icons/icon-calendar.png" alt=""><input id="daily-date" type="date" aria-label="Reflection date"></label>
+            <span class="header-rule" aria-hidden="true"></span>
+          </div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <form id="daily-kata-form" class="reflection-form">
+          <div class="reflection-question">
+            <label for="problem">1. What problem did you actually work on?</label>
+            <p>(Not your task. The real problem.)</p>
+            <textarea id="problem" name="problem" rows="3"></textarea>
+          </div>
+          <div class="reflection-question">
+            <label for="assumption">2. What did you assume, but didn’t check?</label>
+            <textarea id="assumption" name="assumption" rows="3"></textarea>
+          </div>
+          <div class="reflection-question">
+            <label for="decision">3. What decision did you make?</label>
+            <textarea id="decision" name="decision" rows="3"></textarea>
+          </div>
+          <div class="reflection-question">
+            <label for="impact">4. Who did this impact? How?</label>
+            <p>(If answer = “no one”, rethink.)</p>
+            <textarea id="impact" name="impact" rows="3"></textarea>
+          </div>
+          <div class="reflection-question">
+            <label for="tomorrow">5. What would you do differently tomorrow?</label>
+            <p>(Keep it small. Keep it real.)</p>
+            <textarea id="tomorrow" name="tomorrow" rows="2"></textarea>
+          </div>
+
+          <fieldset class="quick-check">
+            <legend><img class="quick-check-icon" src="../style/icons/icon-quick-check.png" alt=""> Quick Check</legend>
+            <label><input type="checkbox" name="understood"> <span>I understood the problem</span></label>
+            <label><input type="checkbox" name="questioned"> <span>I questioned assumptions</span></label>
+            <label><input type="checkbox" name="decisionClear"> <span>I made a clear decision</span></label>
+            <label><input type="checkbox" name="impactThought"> <span>I thought about impact</span></label>
+            <label><input type="checkbox" name="improvement"> <span>I identified one improvement</span></label>
+          </fieldset>
+
+          <p class="reflection-note">Thinking happened. Or it didn’t.</p>
+          <p class="form-message" id="daily-message" aria-live="polite"></p>
+          <button class="continue-button complete-button" type="submit">Complete Daily Kata <img class="button-icon" src="../style/icons/icon-complete-check.png" alt=""></button>
+        </form>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-orange.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

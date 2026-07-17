@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | My Flow</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page flow-page">
+    <main class="app-shell">
+      <section class="flow-screen" aria-labelledby="page-title">
+        <header class="journey-header flow-header">
+          <a class="back-button" href="s06-my-journey.html" aria-label="Back to My Journey"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div>
+            <h1 id="page-title">My Flow</h1>
+            <p>See your growth. Know your next step.</p>
+            <span class="journey-rule" aria-hidden="true"></span>
+          </div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <p class="flow-as-of" data-flow-as-of hidden></p>
+        <section class="flow-loading" data-flow-loading role="status" aria-live="polite">
+          <span class="flow-spinner" aria-hidden="true"></span>
+          <strong>Updating calculations…</strong>
+          <span>Please wait</span>
+        </section>
+
+        <div class="flow-dashboard" data-flow-dashboard hidden>
+        <section class="flow-card current-flow-card" aria-labelledby="current-flow-title">
+          <h2 id="current-flow-title">Current Flow Level</h2>
+          <div class="flow-summary">
+            <img class="current-flow-art" src="../style/icons/art-flow-current.png" alt="">
+            <div>
+              <h3 data-flow-level-name>Shodan</h3>
+              <p class="flow-emphasis" data-flow-level-summary>Beginning your reflective practice</p>
+              <p data-flow-level-message>Start small. Build your habit.</p>
+            </div>
+            <span class="level-badge" data-flow-level-badge>Level 1 of 3</span>
+          </div>
+          <div class="level-track" aria-label="Flow levels">
+            <div class="level-step" data-flow-step="0"><img src="../style/icons/art-flow-shodan.png" alt=""><strong>Shodan</strong><span>Starting out</span></div>
+            <div class="level-step" data-flow-step="1"><img src="../style/icons/art-flow-rensha.png" alt=""><strong>Rensha</strong><span>Practicing<br>with consistency</span></div>
+            <div class="level-step" data-flow-step="2"><img src="../style/icons/art-flow-dosha.png" alt=""><strong>Dōsha</strong><span>Flowing<br>with mastery</span></div>
+          </div>
+        </section>
+
+        <section class="flow-card guidance-card" aria-labelledby="guidance-title">
+          <h2 id="guidance-title">Next Upgrade Guidance</h2>
+          <div class="guidance-content">
+            <img class="guidance-art" src="../style/icons/art-flow-guidance.png" alt="">
+            <div>
+              <p>To grow, focus on <strong data-flow-capability>Understanding Problems</strong>:</p>
+              <ul data-flow-advice></ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="flow-card index-card" aria-labelledby="index-title">
+          <h2 id="index-title">Flow Index</h2>
+          <div class="index-summary">
+            <div class="flow-ring" data-flow-ring aria-label="Flow Index"><strong data-flow-index>0</strong><span>/100</span></div>
+            <div><h3 data-flow-index-heading>Build your practice</h3><p data-flow-index-message>Complete reflections to see your progress.</p></div>
+          </div>
+          <div class="index-bar" aria-hidden="true"><span data-flow-bar></span></div>
+          <div class="index-scale" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+          <p class="index-updated">Updated from your Daily, Weekly and Monthly KATA</p>
+        </section>
+        </div>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-gray.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link active journey-active" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey-blue.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata-gray.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more-gray.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

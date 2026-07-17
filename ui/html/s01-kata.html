@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | Before You Begin</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page">
+    <main class="app-shell" aria-labelledby="page-title">
+      <section class="onboarding-card">
+        <a class="profile-back" href="s10-my-profile.html" hidden>← Back to My Profile</a>
+        <header class="brand" aria-label="KATA — Master Your Craft">
+          <img class="brand-art" src="../style/icons/brand-kata.png" alt="KATA — Master Your Craft">
+        </header>
+
+        <div class="intro">
+          <h1 id="page-title" data-profile-title>Before You Begin</h1>
+          <span class="accent-rule" aria-hidden="true"></span>
+          <p data-profile-copy>Let’s set up your KATA practice.<br>These details help you stay consistent.</p>
+        </div>
+
+        <form id="kata-setup-form" novalidate>
+          <div class="field-group" id="section-name">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+
+          <div class="field-group" id="section-work">
+            <label for="work-type">What kind of work do I do?</label>
+            <span class="field-hint">(e.g., build, sell, design, operate)</span>
+            <input id="work-type" name="workType" type="text" autocomplete="organization-title" required>
+          </div>
+
+          <fieldset class="choice-group" id="section-timing">
+            <legend>When will I do my Daily Kata?</legend>
+            <label class="check-option">
+              <input type="radio" name="dailyKataTime" value="End of workday" required>
+              <span>End of workday</span>
+            </label>
+            <label class="check-option">
+              <input type="radio" name="dailyKataTime" value="After key tasks">
+              <span>After key tasks</span>
+            </label>
+            <label class="check-option other-option">
+              <input type="radio" name="dailyKataTime" value="Other">
+              <span>Other:</span>
+              <input class="inline-input" id="other-time" name="otherTime" type="text" aria-label="Other Daily Kata time">
+            </label>
+          </fieldset>
+
+          <section class="commitment-card" id="section-commitment" aria-labelledby="commitment-title">
+            <h2 id="commitment-title"><img class="commitment-icon" src="../style/icons/icon-commitment.png" alt=""> A small commitment</h2>
+            <p>I will use this for the next 21 days.</p>
+            <div class="commitment-options">
+              <label class="check-option">
+                <input type="radio" name="commitment" value="Yes" required>
+                <span>Yes</span>
+              </label>
+              <label class="check-option">
+                <input type="radio" name="commitment" value="Let's see">
+                <span>Let’s see</span>
+              </label>
+            </div>
+          </section>
+
+          <p class="commitment-note">This commitment is for my own sake.</p>
+          <p id="form-message" class="form-message" aria-live="polite"></p>
+          <button class="continue-button" type="submit"><span data-profile-submit-label>Continue</span> <span aria-hidden="true">→</span></button>
+        </form>
+
+        <footer class="method-mark" aria-label="Method">
+          <img class="method-art" src="../style/icons/brand-method.png" alt="Method">
+        </footer>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

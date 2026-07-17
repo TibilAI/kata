@@ -1,0 +1,395 @@
+# Flow Engine v1
+
+The Flow Engine measures the user's practice consistency and quality of reflection.
+
+It has three independent outputs:
+
+1. Flow Level
+2. Next Upgrade Guidance
+3. Flow Index
+
+---
+
+# 1. Flow Level
+
+Flow Level represents the user's current stage of deliberate practice.
+
+There are three levels.
+
+| Level | Meaning |
+|--------|---------|
+| Shodan | Beginning a reflective practice |
+| Rensha | Consistent practitioner |
+| Dōsha | Deliberate practitioner with clear thinking habits |
+
+A user can only move forward one level at a time.
+
+Downgrades are not automatic.
+
+---
+
+## Promotion Rules
+
+### Shodan → Rensha
+
+Minimum evidence
+
+• Complete at least 21 Daily practices
+
+AND
+
+• Complete at least 3 Weekly practices
+
+AND
+
+• Complete 1 Monthly practice
+
+AND
+
+• Average Flow Index ≥ 60
+
+AND
+
+• No gap longer than 7 consecutive days
+
+---
+
+### Rensha → Dōsha
+
+Minimum evidence
+
+• Complete additional 60 Daily practices
+
+AND
+
+• Complete additional 8 Weekly practices
+
+AND
+
+• Complete additional 3 Monthly practices
+
+AND
+
+• Average Flow Index ≥ 80
+
+AND
+
+• No gap longer than 14 consecutive days
+
+---
+
+# 2. Next Upgrade Guidance
+
+Guidance is NOT AI generated.
+
+It is rule based.
+
+The engine analyses every completed Practice.
+
+---
+
+Each question belongs to one capability.
+
+| Capability | Questions |
+|------------|-----------|
+| Understanding Problems | D1 W1 M1 |
+| Challenging Assumptions | D2 |
+| Decision Making | D3 M4 |
+| Creating Impact | D4 W2 M7 |
+| Continuous Improvement | D5 W3 M8 |
+
+---
+
+For every completed Practice
+
+Each capability earns
+
++1
+
+if answered
+
+0
+
+if skipped
+
+---
+
+Capability score
+
+Capability Score
+
+=
+
+Answered Questions
+
+÷
+
+Possible Questions
+
+---
+
+Example
+
+Understanding Problems
+
+Answered
+
+18
+
+Possible
+
+30
+
+Score
+
+60%
+
+---
+
+The lowest capability becomes
+
+Next Upgrade Guidance
+
+Example
+
+Current Scores
+
+Understanding Problems
+
+82%
+
+Decision Making
+
+91%
+
+Impact
+
+48%
+
+Improvement
+
+74%
+
+↓
+
+Guidance
+
+Focus on
+
+Creating Impact
+
+---
+
+Recommendations
+
+Each capability has predefined advice.
+
+Example
+
+Creating Impact
+
+• Think about stakeholders before acting
+
+• Ask "Who benefits?"
+
+• Capture measurable outcomes
+
+---
+
+No LLM required.
+
+---
+
+# 3. Flow Index
+
+Flow Index
+
+0–100
+
+The score measures practice quality.
+
+It is NOT based on sentiment.
+
+It is based on behaviour.
+
+---
+
+## Components
+
+Daily Consistency
+
+30 points
+
+Weekly Consistency
+
+20 points
+
+Monthly Consistency
+
+20 points
+
+Reflection Completeness
+
+20 points
+
+Recency
+
+10 points
+
+Total
+
+100
+
+---
+
+## Daily Consistency
+
+Completed Daily
+
+÷
+
+Expected Daily
+
+×
+
+30
+
+---
+
+## Weekly
+
+Completed Weekly
+
+÷
+
+Expected Weekly
+
+×
+
+20
+
+---
+
+## Monthly
+
+Completed Monthly
+
+÷
+
+Expected Monthly
+
+×
+
+20
+
+---
+
+## Reflection Completeness
+
+Every answered question
+
+receives
+
+1 point
+
+Skipped
+
+0
+
+Completion %
+
+×
+
+20
+
+---
+
+## Recency
+
+Practised today
+
+10
+
+Practised yesterday
+
+8
+
+2 days ago
+
+6
+
+3 days ago
+
+4
+
+4–7 days
+
+2
+
+>7 days
+
+0
+
+---
+
+## Final Formula
+
+Flow Index
+
+=
+
+Daily
+
++
+
+Weekly
+
++
+
+Monthly
+
++
+
+Reflection
+
++
+
+Recency
+
+Maximum
+
+100
+
+---
+
+# Recalculation
+
+Flow Index recalculates
+
+after every Practice submission.
+
+---
+
+# V1 Philosophy
+
+Flow rewards
+
+• consistency
+
+• reflection
+
+• deliberate thinking
+
+It does NOT reward
+
+• writing longer answers
+
+• emotions
+
+• AI judged quality
+
+• productivity
+
+• output
+
+The goal is to reward the habit of thinking.

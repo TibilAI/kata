@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <title>KATA | Monthly Practice</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page reflection-page monthly-page">
+    <main class="app-shell">
+      <section class="reflection-screen" aria-labelledby="page-title">
+        <header class="reflection-header">
+          <a class="back-button" href="s02-my-practice.html" aria-label="Back to My Practice"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div>
+            <h1 id="page-title">Monthly Practice</h1>
+            <label class="date-picker-label"><img class="date-icon" src="../style/icons/icon-calendar.png" alt=""><input id="monthly-date" type="month" aria-label="Practice month"></label>
+            <span class="header-rule monthly-rule" aria-hidden="true"></span>
+          </div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <form id="monthly-kata-form" class="reflection-form monthly-form">
+          <section class="monthly-section" aria-labelledby="sense-title">
+            <h2 id="sense-title"><strong>Sense → Think →</strong> Build → Improve</h2>
+            <div class="reflection-question">
+              <label for="problem-solving">1. What problem am I solving?</label>
+              <p>(Be precise. Avoid vague statements.)</p>
+              <textarea id="problem-solving" name="problemSolving" rows="2"></textarea>
+            </div>
+            <div class="reflection-question">
+              <label for="success">2. What does success look like?</label>
+              <p>(How will I know this worked?)</p>
+              <textarea id="success" name="success" rows="2"></textarea>
+            </div>
+            <div class="reflection-question compact-question">
+              <label for="options">3. What options did I consider?</label>
+              <textarea id="options" name="options" rows="1"></textarea>
+            </div>
+            <div class="reflection-question compact-question">
+              <label for="approach">4. Why did I choose this approach?</label>
+              <textarea id="approach" name="approach" rows="1"></textarea>
+            </div>
+          </section>
+
+          <section class="monthly-section build-section" aria-labelledby="build-title">
+            <h2 id="build-title">Sense → Think → <strong>Build → Improve</strong></h2>
+            <div class="reflection-question">
+              <label for="actual-work">5. What did I actually do?</label>
+              <p>(Keep it concrete.)</p>
+              <textarea id="actual-work" name="actualWork" rows="2"></textarea>
+            </div>
+            <div class="reflection-question compact-question">
+              <label for="tradeoffs">6. What trade-offs did I make?</label>
+              <textarea id="tradeoffs" name="tradeoffs" rows="1"></textarea>
+            </div>
+            <div class="reflection-question">
+              <label for="monthly-impact">7. What was the impact?</label>
+              <p>(Who benefited? How?)</p>
+              <textarea id="monthly-impact" name="impact" rows="2"></textarea>
+            </div>
+            <div class="reflection-question compact-question">
+              <label for="next-improvement">8. What would I improve next time?</label>
+              <textarea id="next-improvement" name="nextImprovement" rows="1"></textarea>
+            </div>
+          </section>
+
+          <fieldset class="reality-check monthly-reality">
+            <legend>Reality Check</legend>
+            <div><p>Was my thinking clear?</p>
+              <label><input type="radio" name="clarity" value="Yes"> <span>Yes</span></label>
+              <label><input type="radio" name="clarity" value="Not really"> <span>Not really</span></label>
+            </div>
+          </fieldset>
+          <p class="monthly-note">Clear thinking shows in outcomes.</p>
+          <p class="form-message" id="monthly-message" aria-live="polite"></p>
+          <button class="continue-button complete-button monthly-complete" type="submit">Complete Monthly Practice <img class="button-icon" src="../style/icons/icon-complete-check.png" alt=""></button>
+        </form>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-blue.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+    <script src="../script/common.js"></script>
+  </body>
+</html>

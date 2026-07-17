@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#fbf8f4">
+    <meta name="color-scheme" content="light">
+    <title>KATA | My Reflections</title>
+    <link rel="stylesheet" href="../style/common.css">
+  </head>
+  <body class="kata-page reflections-page">
+    <main class="app-shell">
+      <section class="reflections-screen" aria-labelledby="page-title">
+        <header class="journey-header reflections-header">
+          <a class="back-button" href="s06-my-journey.html" aria-label="Back to My Journey"><img class="header-icon" src="../style/icons/icon-back.png" alt=""></a>
+          <div>
+            <h1 id="page-title">My Reflections</h1>
+            <p>Your thoughts &amp; ideas. Reflect to grow.</p>
+            <span class="journey-rule" aria-hidden="true"></span>
+          </div>
+          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+        </header>
+
+        <section class="reflections-toolbar" aria-label="Reflection controls">
+          <label class="entry-type-select"><img src="../style/icons/icon-toolbar-sliders.png" alt=""><select data-entry-type aria-label="Entry type"><option value="all">All Entries</option><option value="reflection">Reflections</option><option value="daily">Daily Loop</option><option value="weekly">Weekly Reset</option><option value="monthly">Monthly Challenge</option></select></label>
+          <div class="toolbar-actions"><button type="button" data-search-toggle aria-label="Search entries"><img src="../style/icons/icon-search.png" alt=""></button><button type="button" data-filter-toggle aria-label="Toggle archived entries"><img src="../style/icons/icon-filter.png" alt=""></button></div>
+          <input class="entry-search" data-entry-search type="search" placeholder="Search reflections" hidden>
+        </section>
+
+        <section class="reflection-timeline" data-reflection-timeline aria-live="polite"></section>
+        <section class="reflection-archive" data-reflection-archive></section>
+        <button class="add-reflection" type="button" data-add-reflection aria-label="Add reflection"><img src="../style/icons/icon-add-reflection.png" alt=""></button>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <a class="nav-link" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-gray.png" alt=""><span>My Practice</span></a>
+          <a class="nav-link active journey-active" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey-blue.png" alt=""><span>My Journey</span></a>
+          <a class="nav-link" href="s09-my-kata.html"><img class="nav-icon-image" src="../style/icons/nav-kata-gray.png" alt=""><span>My KATA</span></a>
+          <button class="nav-link nav-more-trigger" type="button" data-bottom-more><img class="nav-icon-image" src="../style/icons/nav-more-gray.png" alt=""><span>More</span></button>
+        </nav>
+      </section>
+    </main>
+
+    <dialog class="reflection-composer" data-reflection-composer>
+      <form method="dialog" data-reflection-form>
+        <button class="composer-close" type="button" data-composer-close aria-label="Close">×</button>
+        <img class="composer-art" src="../style/icons/art-reflection-quill.png" alt="">
+        <h2 data-composer-title>New Reflection</h2>
+        <p class="composer-date" data-composer-date hidden></p>
+        <label for="reflection-content">What’s on your mind?</label>
+        <textarea id="reflection-content" name="content" rows="6" required></textarea>
+        <button class="continue-button" type="submit" value="save" data-composer-save>Save Reflection</button>
+      </form>
+    </dialog>
+    <script src="../script/common.js"></script>
+  </body>
+</html>
