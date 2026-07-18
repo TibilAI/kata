@@ -36,6 +36,13 @@ body {
 .profile-back { display: block; margin: -11px 0 24px; color: var(--ink); font-size: 14px; text-decoration: none; }
 .profile-back[hidden] { display: none; }
 
+/* App entry */
+.app-entry-screen { display: grid; width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); align-content: center; justify-items: center; gap: 28px; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
+.app-entry-screen img { width: min(65vw, 260px); height: auto; }
+.app-entry-spinner { width: 32px; height: 32px; border: 3px solid #e3eaf3; border-top-color: #c95331; border-radius: 50%; animation: flow-spin .85s linear infinite; }
+.app-entry-screen p { margin: 0; color: var(--muted); font-size: 16px; }
+@media (max-width: 540px) { .app-entry-screen { min-height: 100vh; box-shadow: none; } }
+
 .brand { text-align: center; }
 .brand-art { display: block; width: min(78%, 292px); height: auto; margin: 0 auto; }
 .brand-mark { height: 43px; position: relative; }
@@ -166,13 +173,123 @@ body {
 .profile-commitment h2 { margin: 2px 0 16px; }
 .profile-commitment p { margin: 0 0 14px; font-size: 16px; }
 .profile-commitment strong { color: #bd461f; font-size: 16px; }
+.auto-lock-card { display: grid; grid-template-columns: 58px 1fr; gap: 15px; align-items: start; margin: 0 22px 18px; padding: 20px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); }
+.auto-lock-card > img { width: 50px; height: 50px; object-fit: contain; }
+.auto-lock-card h2 { margin: 3px 0 11px; font-size: 18px; }
+.auto-lock-card label { color: #4f5053; font-size: 16px; }
+.auto-lock-card input { width: 42px; height: 28px; margin: 0 3px; padding: 1px 3px; border: 0; border-bottom: 1px solid #77736f; border-radius: 0; background: transparent; color: var(--ink); font: inherit; text-align: center; outline: none; }
+.auto-lock-card input:focus { border-bottom: 2px solid var(--accent); }
+.auto-lock-card input[aria-invalid="true"] { border-color: #a63922; }
+.auto-lock-card p { margin: 8px 0 0; color: #747477; font-size: 13px; }
+.auto-lock-card .auto-lock-message { min-height: 17px; margin-top: 4px; color: #a63922; }
+.auto-lock-card .auto-lock-message.success { color: #357047; }
 .password-row { display: grid; grid-template-columns: 74px 1fr 26px; align-items: center; gap: 16px; margin: 0 22px 30px; padding: 17px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); color: var(--ink); font-size: 18px; font-weight: 600; text-decoration: none; }
 .password-row img { width: 55px; height: 55px; object-fit: contain; }
 .password-row img:last-child { width: 22px; height: 22px; }
 .more-active { color: #24558b; }
 .more-active::before { background: #24558b; }
 @media (max-width: 540px) { .profile-screen { min-height: 100vh; box-shadow: none; } }
-@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .password-row { margin-inline: 16px; } }
+@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .auto-lock-card, .password-row { margin-inline: 16px; } .auto-lock-card { grid-template-columns: 49px 1fr; padding-inline: 17px; } .auto-lock-card > img { width: 43px; height: 43px; } }
+
+/* Change Password (S12) */
+.pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
+.pin-header { padding-bottom: 18px; }
+.pin-header h1 { font-size: clamp(32px, 7.5vw, 42px); white-space: nowrap; }
+.pin-brand { margin: 4px auto 35px; text-align: center; }
+.pin-brand img { display: block; width: 190px; height: auto; margin: auto; }
+.pin-introduction { display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: center; margin: 0 52px 47px; }
+.pin-info-icon { display: grid; width: 47px; height: 47px; place-items: center; border: 1.5px solid #c95331; border-radius: 50%; box-shadow: inset 0 0 0 10px #fdf3ea; color: #c95331; font: 400 27px/1 Georgia, serif; }
+.pin-introduction p { margin: 0; color: #414146; font-size: 17px; line-height: 1.55; }
+.pin-form { padding: 0 52px 35px; }
+.pin-fieldset { margin: 0 0 42px; padding: 0; border: 0; }
+.pin-fieldset legend { margin-bottom: 14px; color: #646468; font-size: 19px; }
+.pin-inputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.pin-inputs input { width: 100%; aspect-ratio: 1 / 1; min-height: 70px; padding: 0; border: 1px solid #d8d5d2; border-radius: 12px; background: rgb(255 255 255 / 35%); color: var(--ink); font: 400 38px/1 Avenir Next, sans-serif; text-align: center; outline: none; }
+.pin-inputs input:focus { border: 2px solid #24558b; box-shadow: 0 0 0 2px rgb(36 85 139 / 12%); }
+.pin-inputs input[aria-invalid="true"] { border-color: #ad3f28; }
+.pin-requirements { margin: 2px 0 40px; }
+.pin-requirements h2 { margin: 0 0 22px; color: #646468; font-size: 18px; font-weight: 500; }
+.pin-requirements ul { display: grid; gap: 17px; margin: 0; padding: 0; list-style: none; color: #5f6063; font-size: 16px; }
+.pin-requirements li { display: flex; align-items: center; gap: 13px; }
+.pin-requirements li::before { content: "✓"; display: grid; width: 24px; height: 24px; place-items: center; border: 1.5px solid #c95331; border-radius: 50%; color: #c95331; font-size: 15px; font-weight: 700; }
+.pin-message { min-height: 20px; margin: -23px 0 11px; color: #a63922; font-size: 14px; text-align: center; }
+.pin-message.success { color: #357047; }
+.pin-update-button, .pin-cancel-button { display: flex; width: 100%; min-height: 62px; align-items: center; justify-content: center; border-radius: 15px; font: 700 19px/1 Avenir Next, Avenir, sans-serif; text-decoration: none; }
+.pin-update-button { gap: 18px; border: 0; background: #c94d16; box-shadow: 0 7px 12px rgb(73 45 30 / 18%); color: #fff; cursor: pointer; }
+.pin-update-button:disabled { cursor: not-allowed; opacity: .48; }
+.pin-update-button:not(:disabled):hover { background: #b94614; }
+.pin-update-button:focus-visible, .pin-cancel-button:focus-visible { outline: 3px solid #24558b; outline-offset: 3px; }
+.pin-lock { position: relative; width: 22px; height: 18px; border: 2px solid currentColor; border-radius: 3px; }
+.pin-lock::before { content: ""; position: absolute; left: 4px; bottom: 16px; width: 10px; height: 10px; border: 2px solid currentColor; border-bottom: 0; border-radius: 8px 8px 0 0; }
+.pin-lock::after { content: ""; position: absolute; left: 8px; top: 6px; width: 3px; height: 5px; border-radius: 2px; background: currentColor; }
+.pin-cancel-button { margin-top: 18px; border: 1.5px solid #c95331; color: #bf461f; }
+@media (max-width: 540px) { .pin-screen { min-height: 100vh; box-shadow: none; } }
+@media (max-width: 410px) { .pin-introduction, .pin-form { margin-inline: 0; padding-inline: 34px; } .pin-introduction { grid-template-columns: 46px 1fr; gap: 12px; } .pin-info-icon { width: 42px; height: 42px; } .pin-inputs { gap: 12px; } }
+
+/* Enter Password (S13) */
+.enter-pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
+.enter-pin-brand { margin: clamp(68px, 14vw, 118px) auto 56px; text-align: center; }
+.enter-pin-brand img { display: block; width: min(67vw, 275px); height: auto; }
+.enter-pin-heading { text-align: center; }
+.enter-pin-heading h1 { margin: 0; font: 600 clamp(30px, 7vw, 39px)/1.2 Georgia, Times New Roman, serif; }
+.enter-pin-heading p { margin: 17px 0 0; color: #646468; font-size: 19px; }
+.enter-pin-lock { position: relative; display: grid; width: 100px; height: 100px; place-items: center; margin: 68px auto 73px; border-radius: 50%; background: #f8ece6; }
+.enter-pin-lock span { position: relative; width: 36px; height: 30px; border: 3px solid #c04a22; border-radius: 4px; }
+.enter-pin-lock span::before { content: ""; position: absolute; left: 6px; bottom: 28px; width: 18px; height: 20px; border: 3px solid #c04a22; border-bottom: 0; border-radius: 13px 13px 0 0; }
+.enter-pin-lock span::after { content: ""; position: absolute; left: 14px; top: 9px; width: 5px; height: 10px; border-radius: 3px; background: #c04a22; }
+.enter-pin-form { padding: 0 54px; }
+.enter-pin-inputs { gap: 20px; }
+.enter-pin-inputs input { min-height: 87px; }
+.enter-pin-message { min-height: 22px; margin: 13px 0 0; color: #a63922; font-size: 14px; text-align: center; }
+.forgot-pin { margin: auto 46px 52px; color: #646468; text-align: center; }
+.forgot-pin h2 { display: flex; align-items: center; gap: 18px; margin: 0 0 21px; color: #bf461f; font-size: 20px; font-weight: 600; }
+.forgot-pin h2::before, .forgot-pin h2::after { content: ""; height: 1px; flex: 1; background: #e4d9d2; }
+.forgot-pin p { margin: 0; font-size: 17px; line-height: 1.55; }
+.forgot-pin a { color: inherit; text-decoration: none; }
+.forgot-pin a:hover, .forgot-pin a:focus-visible { color: #bf461f; text-decoration: underline; }
+@media (max-width: 540px) { .enter-pin-screen { min-height: 100vh; box-shadow: none; } }
+@media (max-width: 410px) { .enter-pin-brand { margin-top: 62px; } .enter-pin-form { padding-inline: 34px; } .enter-pin-inputs { gap: 12px; } .enter-pin-lock { margin-block: 55px 62px; } }
+
+/* Forgot Password (S14) */
+.forgot-pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
+.forgot-pin-header { padding-bottom: 16px; }
+.forgot-pin-header h1 { font-size: clamp(31px, 7.4vw, 40px); white-space: nowrap; }
+.forgot-pin-header p { margin-top: 14px; }
+.reset-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 42px 42px; padding: 0; list-style: none; text-align: center; }
+.reset-progress li { position: relative; display: grid; justify-items: center; gap: 10px; color: #98999b; font-size: 13px; }
+.reset-progress li:not(:last-child)::after { content: ""; position: absolute; top: 17px; left: calc(50% + 22px); width: calc(100% - 30px); height: 1px; background: #d9d6d2; }
+.reset-progress span { display: grid; z-index: 1; width: 34px; height: 34px; place-items: center; border: 1.5px solid #bec0c2; border-radius: 50%; background: var(--paper); font-size: 17px; font-weight: 600; }
+.reset-progress strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.reset-progress .active { color: #bf461f; }
+.reset-progress .active span { border-color: #bf461f; background: #bf461f; color: #fff; }
+.forgot-pin-form { padding: 0 52px 28px; }
+.verify-notice { display: grid; grid-template-columns: 49px 1fr; gap: 16px; align-items: center; margin-bottom: 38px; padding: 21px; border: 1px solid #f0d9c9; border-radius: 12px; }
+.verify-notice .pin-info-icon { width: 39px; height: 39px; font-size: 23px; box-shadow: none; }
+.verify-notice p { margin: 0; color: #454549; font-size: 17px; line-height: 1.45; }
+.reset-field { margin-bottom: 32px; }
+.reset-field label, .reset-choice-group legend { display: block; margin-bottom: 11px; color: #56575a; font-size: 18px; }
+.reset-field input { width: 100%; min-height: 55px; padding: 12px 16px; border: 1px solid #d5d1cc; border-radius: 10px; background: transparent; color: var(--ink); font: inherit; outline: none; }
+.reset-field input:focus, .reset-choice-group input:focus-visible { border-color: #24558b; box-shadow: 0 0 0 2px rgb(36 85 139 / 12%); }
+.reset-choice-group { margin: 0 0 35px; padding: 0; border: 0; }
+.reset-choice-group .check-option { margin-block: 17px; color: #56575a; }
+.reset-commitment { margin-bottom: 33px; padding: 25px; border: 1px solid #f0d9c9; border-radius: 12px; }
+.reset-commitment h2 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: 19px; }
+.reset-commitment h2 img { width: 30px; height: 30px; object-fit: contain; }
+.reset-commitment p { margin: 21px 0 20px; font-size: 17px; }
+.forgot-pin-message { min-height: 19px; margin: -20px 0 11px; color: #a63922; font-size: 14px; text-align: center; }
+.reset-verify-button, .reset-cancel-button { display: flex; width: 100%; min-height: 61px; align-items: center; justify-content: center; border-radius: 13px; font: 700 19px/1 Avenir Next, Avenir, sans-serif; text-decoration: none; }
+.reset-verify-button { border: 0; background: #c94d16; color: #fff; cursor: pointer; box-shadow: 0 7px 12px rgb(73 45 30 / 18%); }
+.reset-cancel-button { border: 1.5px solid #c95331; color: #bf461f; }
+.reset-or { display: flex; align-items: center; gap: 18px; margin: 18px 0; color: #a5a3a0; font-size: 15px; text-align: center; }
+.reset-or::before, .reset-or::after { content: ""; height: 1px; flex: 1; background: #e4d9d2; }
+.reset-complete { padding: 56px 52px; text-align: center; }
+.reset-complete-check { display: grid; width: 72px; height: 72px; place-items: center; margin: 0 auto 24px; border-radius: 50%; background: #e9f3eb; color: #357047; font-size: 36px; font-weight: 700; }
+.reset-complete h2 { margin: 0 0 12px; font: 600 32px/1.2 Georgia, Times New Roman, serif; }
+.reset-complete p { margin: 0 0 40px; color: #626367; font-size: 17px; }
+.pin-reset-progress { margin-top: 0; margin-bottom: 16px; }
+.pin-reset-progress[hidden] { display: none; }
+@media (max-width: 540px) { .forgot-pin-screen { min-height: 100vh; box-shadow: none; } }
+@media (max-width: 410px) { .reset-progress { margin-inline: 24px; } .forgot-pin-form { padding-inline: 34px; } .verify-notice { padding-inline: 16px; } .reset-commitment { padding-inline: 18px; } }
 
 /* About (S11) */
 .about-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
@@ -289,9 +406,11 @@ body {
 .more-button .header-icon { width: 23px; height: 32px; }
 .more-popup { position: fixed; z-index: 20; display: flex; min-width: 155px; flex-direction: column; overflow: hidden; border: 1px solid #e3d9d0; border-radius: 13px; background: #fffdfb; box-shadow: 0 10px 24px rgb(61 45 34 / 18%); }
 .more-popup[hidden] { display: none; }
-.more-popup a { padding: 14px 17px; color: var(--ink); font-size: 15px; text-decoration: none; }
-.more-popup a + a { border-top: 1px solid #eee6df; }
-.more-popup a:hover, .more-popup a:focus-visible { background: #f8f2ec; outline: none; }
+.more-popup a, .more-popup button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 14px 17px; border: 0; background: transparent; color: var(--ink); font: 15px Avenir Next, Avenir, sans-serif; text-align: left; text-decoration: none; cursor: pointer; }
+.more-popup a + a, .more-popup a + button { border-top: 1px solid #eee6df; }
+.more-popup a:hover, .more-popup a:focus-visible, .more-popup button:hover, .more-popup button:focus-visible { background: #f8f2ec; outline: none; }
+.more-lock-icon { position: relative; width: 14px; height: 12px; margin-left: 1px; border: 1.5px solid #a84b2c; border-radius: 2px; }
+.more-lock-icon::before { content: ""; position: absolute; left: 2px; bottom: 10px; width: 7px; height: 7px; border: 1.5px solid #a84b2c; border-bottom: 0; border-radius: 6px 6px 0 0; }
 .date-picker-label { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; }
 .date-picker-label > span { font-size: 19px; }
 .date-icon { width: 20px; height: 20px; object-fit: contain; }

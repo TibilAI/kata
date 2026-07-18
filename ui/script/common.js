@@ -1,4 +1,21 @@
 (() => {
+  if (!document.querySelector('[data-app-entry]')) return;
+  let profile = null;
+  try { profile = JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { profile = null; }
+  const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
+  const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
+  if (!validProfile) {
+    window.location.replace('s01-kata.html');
+    return;
+  }
+  if (!localStorage.getItem('kata.security.pin')) {
+    window.location.replace('s12-change-password.html?mode=initial');
+    return;
+  }
+  window.location.replace('s13-enter-password.html');
+})();
+
+(() => {
   const form = document.querySelector('#kata-setup-form');
   const statusDefaults = { daily: 'Today', weekly: '2 days ago', monthly: '10 days ago' };
 
@@ -19,6 +36,7 @@
   const message = document.querySelector('#form-message');
   const otherTime = document.querySelector('#other-time');
   const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+  const firstTimeSetup = !saved;
   const parameters = new URLSearchParams(window.location.search);
   const profileMode = parameters.get('mode') === 'profile';
 
@@ -70,10 +88,201 @@
     message.style.color = '#357047';
     message.textContent = profileMode ? 'Your profile has been saved.' : 'Your KATA practice has been saved.';
     window.setTimeout(() => {
-      window.location.href = profileMode ? 's10-my-profile.html' : 's02-my-practice.html';
+      if (profileMode) window.location.href = 's10-my-profile.html';
+      else window.location.href = firstTimeSetup ? 's12-change-password.html?mode=initial' : 's02-my-practice.html';
     }, 250);
   });
 
+})();
+
+(() => {
+  const form = document.querySelector('[data-pin-form]');
+  if (!form) return;
+  const pinMode = new URLSearchParams(window.location.search).get('mode');
+  const resetMode = pinMode === 'reset';
+  const initialMode = pinMode === 'initial';
+  if (initialMode && !localStorage.getItem('kata.setup')) {
+    window.location.replace('s01-kata.html');
+    return;
+  }
+  if (resetMode && sessionStorage.getItem('kata.security.resetApproved') !== 'true') {
+    window.location.replace('s14-forgot-password.html');
+    return;
+  }
+  if (resetMode) {
+    document.querySelector('[data-pin-title]').textContent = 'Change PIN';
+    document.querySelector('[data-pin-subtitle]').textContent = 'Choose a new PIN for your KATA app';
+    document.querySelector('[data-pin-back]').href = 's13-enter-password.html';
+    document.querySelector('[data-pin-back]').setAttribute('aria-label', 'Back to sign in');
+    document.querySelector('[data-pin-cancel]').href = 's13-enter-password.html';
+    document.querySelector('[data-pin-reset-progress]').hidden = false;
+  }
+  if (initialMode) {
+    document.querySelector('[data-pin-title]').textContent = 'Change Password';
+    document.querySelector('[data-pin-subtitle]').textContent = 'Create a PIN to secure your KATA app';
+    document.querySelector('.pin-introduction p').innerHTML = 'Set a new 4-digit PIN to access your KATA app.<br>You’ll enter it each time you return.';
+    document.querySelector('[data-pin-back]').href = 's01-kata.html?mode=profile';
+    document.querySelector('[data-pin-back]').setAttribute('aria-label', 'Back to profile setup');
+    document.querySelector('[data-pin-cancel]').href = 's01-kata.html?mode=profile';
+  }
+  const groups = [...form.querySelectorAll('[data-pin-group]')];
+  const inputs = groups.flatMap((group) => [...group.querySelectorAll('[data-pin-input]')]);
+  const message = form.querySelector('[data-pin-message]');
+  const submit = form.querySelector('[data-pin-submit]');
+  const pinFor = (group) => [...group.querySelectorAll('[data-pin-input]')].map((input) => input.value).join('');
+  const resetErrors = () => inputs.forEach((input) => input.removeAttribute('aria-invalid'));
+  const validate = () => {
+    const newPin = pinFor(groups[0]);
+    const confirmation = pinFor(groups[1]);
+    const complete = newPin.length === 4 && confirmation.length === 4;
+    submit.disabled = !complete || newPin !== confirmation;
+    if (message.classList.contains('success')) return;
+    message.textContent = complete && newPin !== confirmation ? 'The PINs do not match. Please try again.' : '';
+  };
+  const fillFrom = (start, value) => {
+    const digits = value.replace(/\D/g, '').slice(0, inputs.length - start).split('');
+    digits.forEach((digit, index) => { inputs[start + index].value = digit; });
+    const next = inputs[Math.min(start + digits.length, inputs.length - 1)];
+    next?.focus();
+    validate();
+  };
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      const digits = input.value.replace(/\D/g, '');
+      if (digits.length > 1) { fillFrom(index, digits); return; }
+      input.value = digits;
+      resetErrors(); message.classList.remove('success');
+      if (digits && inputs[index + 1]) inputs[index + 1].focus();
+      validate();
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Backspace' && !input.value && inputs[index - 1]) { inputs[index - 1].focus(); }
+      if (event.key === 'ArrowLeft' && inputs[index - 1]) { event.preventDefault(); inputs[index - 1].focus(); }
+      if (event.key === 'ArrowRight' && inputs[index + 1]) { event.preventDefault(); inputs[index + 1].focus(); }
+    });
+    input.addEventListener('paste', (event) => {
+      event.preventDefault();
+      fillFrom(index, event.clipboardData.getData('text'));
+    });
+  });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const newPin = pinFor(groups[0]);
+    const confirmation = pinFor(groups[1]);
+    resetErrors(); message.classList.remove('success');
+    if (!/^\d{4}$/.test(newPin)) {
+      message.textContent = 'Enter a four-digit PIN using numbers only.';
+      groups[0].querySelector('[data-pin-input]').focus();
+      return;
+    }
+    if (newPin !== confirmation) {
+      message.textContent = 'The PINs do not match. Please try again.';
+      [...groups[1].querySelectorAll('[data-pin-input]')].forEach((input) => input.setAttribute('aria-invalid', 'true'));
+      groups[1].querySelector('[data-pin-input]').focus();
+      return;
+    }
+    localStorage.setItem('kata.security.pin', newPin);
+    sessionStorage.removeItem('kata.session.unlocked');
+    sessionStorage.removeItem('kata.session.expiresAt');
+    message.textContent = 'Your PIN has been updated.';
+    message.classList.add('success');
+    submit.disabled = true;
+    if (resetMode) sessionStorage.removeItem('kata.security.resetApproved');
+    window.setTimeout(() => {
+      if (resetMode) window.location.href = 's14-forgot-password.html?step=complete';
+      else if (initialMode) window.location.href = 's13-enter-password.html';
+      else window.location.href = 's10-my-profile.html';
+    }, 500);
+  });
+})();
+
+(() => {
+  const form = document.querySelector('[data-enter-pin-form]');
+  if (!form) return;
+  if (!localStorage.getItem('kata.setup')) {
+    window.location.replace('s01-kata.html');
+    return;
+  }
+  if (!localStorage.getItem('kata.security.pin')) {
+    window.location.replace('s12-change-password.html?mode=initial');
+    return;
+  }
+  const inputs = [...form.querySelectorAll('[data-enter-pin-input]')];
+  const message = form.querySelector('[data-enter-pin-message]');
+  const enteredPin = () => inputs.map((input) => input.value).join('');
+  const clear = () => inputs.forEach((input) => { input.value = ''; });
+  const submitWhenReady = () => {
+    if (enteredPin().length !== 4) return;
+    const savedPin = localStorage.getItem('kata.security.pin');
+    if (enteredPin() !== savedPin) {
+      message.textContent = 'That PIN is not correct. Please try again.';
+      clear();
+      inputs[0].focus();
+      return;
+    }
+    const autoLockRaw = localStorage.getItem('kata.security.autoLockMinutes') || '';
+    const autoLockMinutes = /^[1-5]$/.test(autoLockRaw) ? Number(autoLockRaw) : 5;
+    sessionStorage.setItem('kata.session.unlocked', 'true');
+    sessionStorage.setItem('kata.session.expiresAt', String(Date.now() + (autoLockMinutes * 60 * 1000)));
+    message.textContent = '';
+    const requested = new URLSearchParams(window.location.search).get('next');
+    const allowedNext = /^(?:s0[2-9]|s10|s11)-[a-z0-9-]+\.html(?:\?[^#]*)?$/i.test(requested || '') ? requested : null;
+    window.location.href = allowedNext || 's02-my-practice.html';
+  };
+  const fillFrom = (start, value) => {
+    const digits = value.replace(/\D/g, '').slice(0, inputs.length - start).split('');
+    digits.forEach((digit, index) => { inputs[start + index].value = digit; });
+    const next = inputs[Math.min(start + digits.length, inputs.length - 1)];
+    next?.focus();
+    submitWhenReady();
+  };
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      const digits = input.value.replace(/\D/g, '');
+      if (digits.length > 1) { fillFrom(index, digits); return; }
+      input.value = digits;
+      message.textContent = '';
+      if (digits && inputs[index + 1]) inputs[index + 1].focus();
+      submitWhenReady();
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Backspace' && !input.value && inputs[index - 1]) inputs[index - 1].focus();
+      if (event.key === 'ArrowLeft' && inputs[index - 1]) { event.preventDefault(); inputs[index - 1].focus(); }
+      if (event.key === 'ArrowRight' && inputs[index + 1]) { event.preventDefault(); inputs[index + 1].focus(); }
+    });
+    input.addEventListener('paste', (event) => { event.preventDefault(); fillFrom(index, event.clipboardData.getData('text')); });
+  });
+})();
+
+(() => {
+  const form = document.querySelector('[data-forgot-pin-form]');
+  if (!form) return;
+  const params = new URLSearchParams(window.location.search);
+  const progress = document.querySelector('[data-reset-progress]');
+  const complete = document.querySelector('[data-reset-complete]');
+  const subtitle = document.querySelector('[data-reset-subtitle]');
+  if (params.get('step') === 'complete') {
+    form.hidden = true;
+    complete.hidden = false;
+    subtitle.textContent = 'Your PIN reset is complete';
+    progress.querySelectorAll('li').forEach((item, index) => item.classList.toggle('active', index === 2));
+    return;
+  }
+  const message = form.querySelector('[data-forgot-pin-message]');
+  const normalize = (value) => (value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+  form.querySelector('#reset-other-time').addEventListener('focus', () => { form.querySelector('[name="dailyKataTime"][value="Other"]').checked = true; });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const saved = JSON.parse(localStorage.getItem('kata.setup') || 'null');
+    const supplied = Object.fromEntries(new FormData(form));
+    if (!saved) { message.textContent = 'No profile details are available to verify.'; return; }
+    const allProvided = supplied.name?.trim() && supplied.workType?.trim() && supplied.dailyKataTime && supplied.commitment && (supplied.dailyKataTime !== 'Other' || supplied.otherTime?.trim());
+    if (!allProvided) { message.textContent = 'Please complete each profile detail to continue.'; return; }
+    const matches = normalize(supplied.name) === normalize(saved.name) && normalize(supplied.workType) === normalize(saved.workType) && supplied.dailyKataTime === saved.dailyKataTime && (supplied.dailyKataTime !== 'Other' || normalize(supplied.otherTime) === normalize(saved.otherTime)) && supplied.commitment === saved.commitment;
+    if (!matches) { message.textContent = 'We could not verify those details. Please try again.'; return; }
+    sessionStorage.setItem('kata.security.resetApproved', 'true');
+    window.location.href = 's12-change-password.html?mode=reset';
+  });
 })();
 
 (() => {
@@ -100,7 +309,7 @@
     const menu = document.createElement('div');
     const menuId = `more-menu-${index}`;
     menu.id = menuId; menu.className = 'more-popup'; menu.hidden = true; menu.setAttribute('role', 'menu');
-    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a>';
+    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a><button type="button" role="menuitem" data-lock-app><span class="more-lock-icon" aria-hidden="true"></span>Lock app</button>';
     document.body.append(menu);
     trigger.setAttribute('aria-haspopup', 'menu');
     trigger.setAttribute('aria-controls', menuId);
@@ -116,6 +325,14 @@
       menu.style.left = `${Math.max(8, bounds.right - menu.offsetWidth)}px`;
       trigger.setAttribute('aria-expanded', 'true');
       menu.querySelector('a').focus();
+    });
+    menu.querySelector('[data-lock-app]').addEventListener('click', () => {
+      const page = window.location.pathname.split('/').pop();
+      const next = `${page}${window.location.search}`;
+      sessionStorage.removeItem('kata.session.unlocked');
+      sessionStorage.removeItem('kata.session.expiresAt');
+      closeMenus(false);
+      window.location.replace(`s13-enter-password.html?next=${encodeURIComponent(next)}`);
     });
   });
   document.addEventListener('pointerdown', (event) => {
@@ -134,6 +351,39 @@
   const timing = profile.dailyKataTime === 'Other' ? (profile.otherTime ? `Other: ${profile.otherTime}` : 'Other') : profile.dailyKataTime;
   set('[data-profile-timing]', timing);
   set('[data-profile-commitment]', profile.commitment);
+})();
+
+(() => {
+  const input = document.querySelector('#auto-lock-minutes');
+  if (!input) return;
+  const message = document.querySelector('[data-auto-lock-message]');
+  const key = 'kata.security.autoLockMinutes';
+  const validMinutes = (value) => /^[1-5]$/.test(String(value).trim()) ? Number(value) : null;
+  let current = validMinutes(localStorage.getItem(key)) || 5;
+  input.value = current;
+  const save = () => {
+    const next = validMinutes(input.value);
+    message.classList.remove('success');
+    input.removeAttribute('aria-invalid');
+    if (!next) {
+      input.value = current;
+      input.setAttribute('aria-invalid', 'true');
+      message.textContent = 'Enter a whole number from 1 to 5.';
+      return;
+    }
+    current = next;
+    localStorage.setItem(key, String(next));
+    if (sessionStorage.getItem('kata.session.unlocked') === 'true') {
+      sessionStorage.setItem('kata.session.expiresAt', String(Date.now() + (next * 60 * 1000)));
+      window.dispatchEvent(new CustomEvent('kata:autolockchange'));
+    }
+    message.textContent = `Auto-lock set to ${next} minute${next === 1 ? '' : 's'}.`;
+    message.classList.add('success');
+  };
+  input.addEventListener('change', save);
+  input.addEventListener('blur', save);
+  input.addEventListener('input', () => { input.removeAttribute('aria-invalid'); message.textContent = ''; message.classList.remove('success'); });
+  input.addEventListener('keydown', (event) => { if (event.key === 'Enter') { event.preventDefault(); input.blur(); } });
 })();
 
 (() => {

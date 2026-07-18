@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#fbf8f4">
     <title>KATA | My Profile</title>
     <link rel="stylesheet" href="../style/common.css">
+    <script src="../script/access-guard.js"></script>
   </head>
   <body class="kata-page profile-page">
     <main class="app-shell">
@@ -24,6 +25,16 @@
           <section class="profile-commitment"><img src="../style/icons/icon-profile-commitment.png" alt=""><div><h2>A small commitment</h2><p>I will use this for the next 21 days.</p><strong data-profile-commitment>Not set</strong></div></section>
         </section>
 
+        <section class="auto-lock-card" aria-labelledby="auto-lock-title">
+          <img src="../style/icons/icon-profile-lock.png" alt="">
+          <div>
+            <h2 id="auto-lock-title">Auto lock app</h2>
+            <label for="auto-lock-minutes">after <input id="auto-lock-minutes" type="number" inputmode="numeric" min="1" max="5" step="1" value="5" aria-describedby="auto-lock-help auto-lock-message"> min of inactivity</label>
+            <p id="auto-lock-help">Choose between 1 and 5 minutes.</p>
+            <p class="auto-lock-message" id="auto-lock-message" data-auto-lock-message aria-live="polite"></p>
+          </div>
+        </section>
+
         <a class="password-row" href="s12-change-password.html"><img src="../style/icons/icon-profile-lock.png" alt=""><span>Change Password</span><img src="../style/icons/icon-profile-chevron.png" alt=""></a>
 
         <nav class="bottom-nav" aria-label="Primary navigation">
@@ -35,5 +46,6 @@
       </section>
     </main>
     <script src="../script/common.js"></script>
+    <script src="../script/idle-lock.js"></script>
   </body>
 </html>
