@@ -9,9 +9,14 @@
 
 * { box-sizing: border-box; }
 
+html { max-width: 100%; overflow-x: clip; }
+img, svg, video, canvas { max-width: 100%; }
+
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
   color: var(--ink);
   background: #eee8e2;
   font-family: Avenir Next, Avenir, Montserrat, Helvetica Neue, Arial, sans-serif;
@@ -20,11 +25,15 @@ body {
 .kata-page { min-height: 100vh; }
 
 .app-shell {
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 24px;
 }
+
+.app-shell > *, .app-shell :is(section, article, header, form, fieldset, div) { min-width: 0; }
 
 .onboarding-card {
   width: min(100%, 500px);
@@ -194,7 +203,7 @@ body {
 /* Change Password (S12) */
 .pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
 .pin-header { padding-bottom: 18px; }
-.pin-header h1 { font-size: clamp(32px, 7.5vw, 42px); white-space: nowrap; }
+.pin-header h1 { font-size: clamp(28px, 7.5vw, 42px); overflow-wrap: anywhere; }
 .pin-brand { margin: 4px auto 35px; text-align: center; }
 .pin-brand img { display: block; width: 190px; height: auto; margin: auto; }
 .pin-introduction { display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: center; margin: 0 52px 47px; }
@@ -253,13 +262,13 @@ body {
 /* Forgot Password (S14) */
 .forgot-pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
 .forgot-pin-header { padding-bottom: 16px; }
-.forgot-pin-header h1 { font-size: clamp(31px, 7.4vw, 40px); white-space: nowrap; }
+.forgot-pin-header h1 { font-size: clamp(28px, 7.4vw, 40px); overflow-wrap: anywhere; }
 .forgot-pin-header p { margin-top: 14px; }
 .reset-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 42px 42px; padding: 0; list-style: none; text-align: center; }
 .reset-progress li { position: relative; display: grid; justify-items: center; gap: 10px; color: #98999b; font-size: 13px; }
 .reset-progress li:not(:last-child)::after { content: ""; position: absolute; top: 17px; left: calc(50% + 22px); width: calc(100% - 30px); height: 1px; background: #d9d6d2; }
 .reset-progress span { display: grid; z-index: 1; width: 34px; height: 34px; place-items: center; border: 1.5px solid #bec0c2; border-radius: 50%; background: var(--paper); font-size: 17px; font-weight: 600; }
-.reset-progress strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.reset-progress strong { font-size: 13px; font-weight: 500; line-height: 1.25; }
 .reset-progress .active { color: #bf461f; }
 .reset-progress .active span { border-color: #bf461f; background: #bf461f; color: #fff; }
 .forgot-pin-form { padding: 0 52px 28px; }
@@ -361,12 +370,12 @@ body {
 .practice-copy { display: block; align-self: center; }
 .practice-title { display: block; margin-bottom: 20px; font: 400 29px/1.08 Georgia, Times New Roman, serif; }
 .practice-description { display: block; font-size: 16px; line-height: 1.45; }
-.practice-status { display: flex; align-items: center; gap: 10px; margin-top: 22px; color: #6a6968; font-size: 14px; white-space: nowrap; }
+.practice-status { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 22px; color: #6a6968; font-size: 14px; }
 .practice-status strong { color: var(--practice-color); font-weight: 600; }
 .calendar-icon { width: 20px; height: 20px; object-fit: contain; }
 .card-arrow { width: 22px; height: 38px; align-self: center; object-fit: contain; }
 .bottom-nav { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: auto; border-top: 1px solid #ede6df; }
-.nav-link { position: relative; display: flex; min-height: 104px; flex-direction: column; align-items: center; justify-content: center; gap: 9px; color: #5f6063; font-size: 13px; text-decoration: none; }
+.nav-link { position: relative; display: flex; min-width: 0; min-height: 104px; flex-direction: column; align-items: center; justify-content: center; gap: 9px; color: #5f6063; font-size: 13px; overflow-wrap: anywhere; text-align: center; text-decoration: none; }
 .nav-link.nav-more-trigger { border: 0; background: transparent; font-family: inherit; cursor: pointer; }
 .nav-link.active { color: var(--accent); font-weight: 700; }
 .nav-link.active::before { content: ""; position: absolute; top: 0; width: 72px; height: 2px; background: var(--accent); }
@@ -679,3 +688,26 @@ body {
 .kata-active { color: #bf461f; }
 .kata-active::before { background: #bf461f; }
 @media (max-width: 540px) { .kata-library-screen { min-height: 100vh; box-shadow: none; } }
+
+/* Narrow mobile viewport fit */
+@media (max-width: 360px) {
+  .journey-header, .reflection-header { grid-template-columns: 36px minmax(0, 1fr) 36px; padding-inline: 16px; }
+  .journey-header h1, .reflection-header h1 { overflow-wrap: anywhere; }
+  .pin-introduction, .pin-form, .enter-pin-form, .forgot-pin-form { padding-inline: 22px; }
+  .pin-introduction { margin-inline: 0; grid-template-columns: 42px minmax(0, 1fr); gap: 10px; }
+  .pin-info-icon { width: 39px; height: 39px; font-size: 22px; }
+  .pin-inputs, .enter-pin-inputs { gap: 8px; }
+  .pin-inputs input { min-height: 58px; font-size: 31px; }
+  .enter-pin-inputs input { min-height: 74px; }
+  .reset-progress { margin-inline: 16px; gap: 3px; }
+  .reset-progress li { gap: 7px; font-size: 11px; }
+  .reset-progress strong { font-size: 11px; }
+  .reset-progress li:not(:last-child)::after { left: calc(50% + 19px); width: calc(100% - 25px); }
+  .verify-notice { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; padding: 16px; }
+  .verify-notice .pin-info-icon { width: 34px; height: 34px; font-size: 20px; }
+  .reset-commitment { padding: 19px 16px; }
+  .flow-summary, .guidance-content, .index-summary { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .level-badge { position: static; justify-self: center; margin-bottom: 10px; }
+  .nav-link { min-height: 94px; gap: 6px; font-size: 11px; }
+  .nav-icon-image { width: 40px; height: 31px; }
+}
