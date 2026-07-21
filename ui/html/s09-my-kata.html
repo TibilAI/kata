@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fbf8f4">
     <title>KATA | My KATA</title>
-    <link rel="stylesheet" href="../style/common.css?v=3">
+    <link rel="stylesheet" href="../style/common.css?v=7">
     <script src="../script/access-guard.js"></script>
   </head>
   <body class="kata-page kata-library-page">
@@ -21,12 +21,33 @@
           <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
         </header>
 
-        <section class="coming-soon" aria-label="My KATA reader coming soon">
-          <img src="../style/icons/nav-kata-orange.png" alt="" class="coming-soon-icon">
-          <p class="coming-soon-eyebrow">My KATA Reader</p>
-          <h2>Coming soon</h2>
-          <p>Thoughtful reading, one page at a time.<br>Your notes and questions will be here too.</p>
+        <section class="kata-reader" data-kata-reader aria-label="My KATA reader">
+          <div class="kata-page-stage" data-kata-stage>
+            <canvas data-kata-canvas hidden aria-label="Current KATA PDF page"></canvas>
+            <p class="kata-reader-status" data-kata-status aria-live="polite">Opening your KATA…</p>
+          </div>
+          <div class="kata-reader-toolbar">
+            <button type="button" class="kata-page-button" data-kata-previous aria-label="Previous page">← <span>Previous</span></button>
+            <label class="kata-page-jump">Page <input type="number" inputmode="numeric" min="1" step="1" data-kata-page-input aria-label="Page number" aria-describedby="kata-page-error" disabled> <span>of <strong data-kata-page-count>—</strong></span></label>
+            <div class="kata-reader-actions">
+              <button type="button" class="kata-notes-button" data-kata-notes disabled>Notes <span class="kata-note-dot" data-kata-note-dot hidden aria-label="Note saved"></span></button>
+              <button type="button" class="kata-page-button" data-kata-next aria-label="Next page"><span>Next</span> →</button>
+            </div>
+          </div>
+          <p class="kata-page-error" id="kata-page-error" data-kata-page-error aria-live="polite" hidden></p>
+          <p class="kata-reader-help">Swipe left or right, use the page controls, or use your keyboard arrow keys.</p>
         </section>
+
+        <dialog class="kata-note-dialog" data-kata-note-dialog aria-labelledby="kata-note-title">
+          <section>
+            <button class="kata-note-close" type="button" data-kata-note-close aria-label="Close notes">×</button>
+            <p class="kata-note-eyebrow" data-kata-note-page>Notes</p>
+            <h2 id="kata-note-title">Your notes</h2>
+            <textarea data-kata-note-input aria-label="Notes for this page" placeholder="Capture an idea, question, or next step…"></textarea>
+            <p class="kata-note-status" data-kata-note-status aria-live="polite"></p>
+            <div class="kata-note-actions"><button type="button" class="kata-note-clear" data-kata-note-clear>Clear note</button><button type="button" class="kata-note-done" data-kata-note-done>Done</button></div>
+          </section>
+        </dialog>
 
         <nav class="bottom-nav" aria-label="Primary navigation">
           <a class="nav-link" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-gray.png" alt=""><span>My Practice</span></a>
@@ -38,5 +59,6 @@
     </main>
     <script src="../script/common.js"></script>
     <script src="../script/idle-lock.js"></script>
+    <script type="module" src="../script/kata-reader.js"></script>
   </body>
 </html>

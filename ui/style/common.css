@@ -676,15 +676,45 @@ body {
   .entry-preview { font-size: 16px; }
 }
 
-/* My KATA placeholder (S09) */
+/* My KATA reader (S09) */
 .kata-library-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
 .kata-library-header { padding-bottom: 35px; }
 .kata-library-rule { display: block; width: 64px; height: 3px; margin: 27px auto 0; background: #bf461f; }
-.coming-soon { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 45px 28px 130px; text-align: center; }
-.coming-soon-icon { width: 100px; height: 90px; margin-bottom: 24px; object-fit: contain; }
-.coming-soon-eyebrow { margin: 0 0 11px; color: #bf461f; font-size: 14px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.coming-soon h2 { margin: 0 0 18px; font: 400 42px/1 Georgia, Times New Roman, serif; }
-.coming-soon > p:last-child { margin: 0; color: #656669; font-size: 17px; line-height: 1.55; }
+.kata-reader { display: flex; flex: 1; flex-direction: column; padding: 0 18px 25px; }
+.kata-reader-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; margin-top: 14px; }
+.kata-page-jump { display: inline-flex; align-items: center; justify-content: center; gap: 4px; color: #5f6063; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.kata-page-jump input { width: 38px; height: 29px; padding: 2px 0; border: 0; border-bottom: 1px solid #77736f; border-radius: 0; background: transparent; color: var(--ink); font: inherit; text-align: center; outline: none; }
+.kata-page-jump input:focus { border-bottom: 2px solid #bf461f; }
+.kata-page-jump input[aria-invalid="true"] { border-color: #a63922; }
+.kata-page-jump input:disabled { opacity: .5; }
+.kata-page-error { min-height: 18px; margin: -9px 0 8px; color: #a63922; font-size: 12px; text-align: center; }
+.kata-page-error[hidden] { display: none; }
+.kata-reader-actions { display: flex; min-width: 0; align-items: center; justify-content: end; gap: 7px; }
+.kata-page-button { display: inline-flex; min-width: 0; min-height: 40px; align-items: center; justify-content: center; gap: 5px; padding: 8px 10px; border: 1px solid #dfd5cc; border-radius: 10px; background: #fffdfb; color: #4d4d4e; font: 600 14px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.kata-page-button:last-child { justify-self: end; }
+.kata-page-button:hover:not(:disabled) { background: #f8f2ec; }
+.kata-page-button:focus-visible, .kata-notes-button:focus-visible, .kata-note-dialog button:focus-visible { outline: 3px solid #24558b; outline-offset: 2px; }
+.kata-page-button:disabled { cursor: not-allowed; opacity: .42; }
+.kata-notes-button { display: inline-flex; min-height: 40px; align-items: center; gap: 6px; padding: 8px 9px; border: 1px solid #dfd5cc; border-radius: 10px; background: #fffdfb; color: #4d4d4e; font: 600 14px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.kata-notes-button:hover:not(:disabled) { background: #f8f2ec; }
+.kata-notes-button:disabled { cursor: not-allowed; opacity: .42; }
+.kata-note-dot { width: 7px; height: 7px; border-radius: 50%; background: #bf461f; }
+.kata-page-stage { display: grid; min-height: 300px; place-items: center; overflow: hidden; border: 1px solid #e8e0d8; border-radius: 16px; background: #f5f1ec; box-shadow: 0 8px 18px rgb(74 56 43 / 8%); }
+.kata-page-stage canvas { display: block; max-width: 100%; height: auto; background: #fff; box-shadow: 0 2px 7px rgb(0 0 0 / 12%); }
+.kata-reader-status { max-width: 280px; margin: 0; padding: 25px; color: #67686b; font-size: 16px; line-height: 1.5; text-align: center; }
+.kata-reader-help { margin: 17px 0 15px; color: #767678; font-size: 13px; line-height: 1.45; text-align: center; }
+.kata-note-dialog { width: min(92vw, 420px); padding: 0; border: 0; border-radius: 20px; box-shadow: 0 18px 50px rgb(0 0 0 / 23%); }
+.kata-note-dialog::backdrop { background: rgb(23 22 21 / 38%); }
+.kata-note-dialog section { position: relative; padding: 30px 26px 24px; }
+.kata-note-close { position: absolute; top: 10px; right: 15px; border: 0; background: transparent; color: #555; font-size: 29px; cursor: pointer; }
+.kata-note-eyebrow { margin: 0 0 8px; color: #bf461f; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.kata-note-dialog h2 { margin: 0 0 19px; font: 400 30px/1.1 Georgia, Times New Roman, serif; }
+.kata-note-dialog textarea { width: 100%; min-height: 175px; padding: 12px; border: 1px solid #d7d0c9; border-radius: 10px; color: var(--ink); font: 16px/1.45 Avenir Next, Avenir, sans-serif; resize: vertical; outline-color: #24558b; }
+.kata-note-status { min-height: 19px; margin: 8px 0 0; color: #5f6063; font-size: 13px; }
+.kata-note-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 15px; }
+.kata-note-actions button { min-height: 43px; padding: 8px 15px; border-radius: 10px; font: 600 15px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.kata-note-clear { border: 1px solid #d7d0c9; background: transparent; color: #5f6063; }
+.kata-note-done { border: 0; background: #bf461f; color: #fff; }
 .kata-active { color: #bf461f; }
 .kata-active::before { background: #bf461f; }
 @media (max-width: 540px) { .kata-library-screen { min-height: 100vh; box-shadow: none; } }
@@ -710,4 +740,8 @@ body {
   .level-badge { position: static; justify-self: center; margin-bottom: 10px; }
   .nav-link { min-height: 94px; gap: 6px; font-size: 11px; }
   .nav-icon-image { width: 40px; height: 31px; }
+  .kata-page-button span { display: none; }
+  .kata-reader-toolbar { gap: 5px; }
+  .kata-reader-actions { gap: 4px; }
+  .kata-page-button, .kata-notes-button { padding-inline: 8px; }
 }
