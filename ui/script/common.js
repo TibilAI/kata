@@ -347,6 +347,43 @@
 (() => {
   const triggers = document.querySelectorAll('[data-bottom-more]');
   if (!triggers.length) return;
+  const safeParse = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key) || ''); } catch (_) { return fallback; } };
+  const recordsFor = (prefix) => Object.keys(localStorage).filter((key) => key.startsWith(prefix)).sort().map((key) => safeParse(key, null)).filter(Boolean);
+  const appInfoPath = /\/html\//.test(window.location.pathname) ? '../data/app-info.json' : 'data/app-info.json';
+  const showExportNotice = () => {
+    const notice = document.createElement('p');
+    notice.className = 'export-notice'; notice.setAttribute('role', 'status'); notice.textContent = 'Your data export is ready. Store it securely.';
+    document.body.append(notice);
+    window.setTimeout(() => notice.remove(), 4500);
+  };
+  const exportData = async () => {
+    let appVersion = 'unknown';
+    try { const response = await fetch(appInfoPath, { cache: 'no-store' }); if (response.ok) appVersion = (await response.json()).version || appVersion; } catch (_) {}
+    const profile = safeParse('kata.setup', {});
+    const data = {
+      schemaVersion: 1,
+      exportedAt: new Date().toISOString(),
+      appVersion,
+      profile,
+      practice: { daily: recordsFor('kata.daily.'), weekly: recordsFor('kata.weekly.'), monthly: recordsFor('kata.monthly.') },
+      reflections: safeParse('kata.reflections', []),
+      flow: safeParse('kata.flow.state', {}),
+      kataReader: { state: safeParse('kata.kataReader.state', {}), notes: safeParse('kata.kataReader.notes', {}) },
+      preferences: {
+        autoLockMinutes: localStorage.getItem('kata.security.autoLockMinutes') || '5',
+        demographicSharing: profile.demographicSharing !== false
+      }
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const download = document.createElement('a');
+    download.href = url;
+    download.download = `kata-my-data-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.append(download); download.click(); download.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    window.KataAnalytics?.track('data_exported');
+    showExportNotice();
+  };
   const menus = [];
   const closeMenus = (returnFocus = false) => menus.forEach(({ trigger, menu }) => {
     if (menu.hidden) return;
@@ -359,7 +396,7 @@
     const menu = document.createElement('div');
     const menuId = `more-menu-${index}`;
     menu.id = menuId; menu.className = 'more-popup'; menu.hidden = true; menu.setAttribute('role', 'menu');
-    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a><button type="button" role="menuitem" data-lock-app><span class="more-lock-icon" aria-hidden="true"></span>Lock app</button>';
+    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a><button type="button" role="menuitem" data-export-my-data>Export My Data</button><button type="button" role="menuitem" data-lock-app><span class="more-lock-icon" aria-hidden="true"></span>Lock app</button>';
     document.body.append(menu);
     trigger.setAttribute('aria-haspopup', 'menu');
     trigger.setAttribute('aria-controls', menuId);
@@ -385,6 +422,10 @@
       window.KataAnalytics?.track('app_locked_manually');
       closeMenus(false);
       window.location.replace(`s13-enter-password.html?next=${encodeURIComponent(next)}`);
+    });
+    menu.querySelector('[data-export-my-data]').addEventListener('click', async () => {
+      closeMenus(false);
+      await exportData();
     });
   });
   document.addEventListener('pointerdown', (event) => {

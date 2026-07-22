@@ -440,10 +440,11 @@ body {
 .more-popup { position: fixed; z-index: 20; display: flex; min-width: 155px; flex-direction: column; overflow: hidden; border: 1px solid #e3d9d0; border-radius: 13px; background: #fffdfb; box-shadow: 0 10px 24px rgb(61 45 34 / 18%); }
 .more-popup[hidden] { display: none; }
 .more-popup a, .more-popup button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 14px 17px; border: 0; background: transparent; color: var(--ink); font: 15px Avenir Next, Avenir, sans-serif; text-align: left; text-decoration: none; cursor: pointer; }
-.more-popup a + a, .more-popup a + button { border-top: 1px solid #eee6df; }
+.more-popup > :not(:first-child) { border-top: 1px solid #eee6df; }
 .more-popup a:hover, .more-popup a:focus-visible, .more-popup button:hover, .more-popup button:focus-visible { background: #f8f2ec; outline: none; }
 .more-lock-icon { position: relative; width: 14px; height: 12px; margin-left: 1px; border: 1.5px solid #a84b2c; border-radius: 2px; }
 .more-lock-icon::before { content: ""; position: absolute; left: 2px; bottom: 10px; width: 7px; height: 7px; border: 1.5px solid #a84b2c; border-bottom: 0; border-radius: 6px 6px 0 0; }
+.export-notice { position: fixed; z-index: 30; right: 16px; bottom: 104px; max-width: min(330px, calc(100vw - 32px)); margin: 0; padding: 14px 17px; border: 1px solid #d6e8d9; border-radius: 12px; background: #f2faf3; box-shadow: 0 8px 22px rgb(44 67 46 / 18%); color: #2e6840; font-size: 14px; line-height: 1.4; }
 .date-picker-label { display: inline-flex; align-items: center; gap: 8px; font-size: 16px; }
 .date-picker-label > span { font-size: 19px; }
 .date-icon { width: 20px; height: 20px; object-fit: contain; }
