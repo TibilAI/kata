@@ -1,0 +1,78 @@
+name: Deploy KATA to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ui/**'
+      - 'scripts/generate-release-info.mjs'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: kata-pages-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - name: Check out source and tags
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Generate release metadata
+        id: release
+        run: node scripts/generate-release-info.mjs
+      - name: Upload ui as the GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./ui
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  tag-release:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out deployed commit
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Tag the deployed release
+        env:
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag --annotate "$RELEASE_TAG" --message "KATA $RELEASE_VERSION"
+          git push origin "$RELEASE_TAG"
