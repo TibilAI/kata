@@ -17,16 +17,28 @@
 
 (() => {
   const form = document.querySelector('#kata-setup-form');
-  const statusDefaults = { daily: 'Today', weekly: '2 days ago', monthly: '10 days ago' };
+  const latestCompletedAt = (type) => {
+    const prefix = `kata.${type}.`;
+    let latest = null;
+    Object.keys(localStorage).filter((key) => key.startsWith(prefix)).forEach((key) => {
+      try {
+        const record = JSON.parse(localStorage.getItem(key));
+        if (!record?.completed) return;
+        const timestamp = Date.parse(record.completedAt || record.updatedAt || '');
+        if (!Number.isNaN(timestamp) && (latest === null || timestamp > latest)) latest = timestamp;
+      } catch (_) {}
+    });
+    return latest;
+  };
 
   document.querySelectorAll('[data-practice-status]').forEach((element) => {
     const type = element.dataset.practiceStatus;
-    const savedDate = localStorage.getItem(`kata.completed.${type}`);
-    if (!savedDate) {
-      element.textContent = statusDefaults[type] || 'Not yet';
+    const timestamp = latestCompletedAt(type);
+    if (timestamp === null) {
+      element.textContent = 'No data available';
       return;
     }
-    const elapsedDays = Math.floor((Date.now() - new Date(savedDate).getTime()) / 86400000);
+    const elapsedDays = Math.max(0, Math.floor((Date.now() - timestamp) / 86400000));
     element.textContent = elapsedDays <= 0 ? 'Today' : `${elapsedDays} day${elapsedDays === 1 ? '' : 's'} ago`;
   });
 
@@ -603,12 +615,14 @@
   const saveRecord = (completed = false) => {
     if (rejectFutureMonth()) return false;
     const existing = JSON.parse(localStorage.getItem(recordKey()) || '{}');
+    const now = new Date().toISOString();
     const record = {
       ...existing,
       month: monthInput.value,
       clarity: form.elements.clarity.value || '',
-      updatedAt: new Date().toISOString(),
-      completed: completed || existing.completed || false
+      updatedAt: now,
+      completed: completed || existing.completed || false,
+      completedAt: completed ? now : existing.completedAt
     };
     fields.forEach((name) => { record[name] = form.elements[name].value; });
     localStorage.setItem(recordKey(), JSON.stringify(record));
@@ -674,13 +688,15 @@
   const saveRecord = (completed = false) => {
     if (rejectFutureWeek()) return false;
     const existing = JSON.parse(localStorage.getItem(recordKey()) || '{}');
+    const now = new Date().toISOString();
     const record = {
       ...existing,
       week: weekInput.value,
       checks: Object.fromEntries(checks.map((name) => [name, form.elements[name].checked])),
       reality: form.elements.reality.value || '',
-      updatedAt: new Date().toISOString(),
-      completed: completed || existing.completed || false
+      updatedAt: now,
+      completed: completed || existing.completed || false,
+      completedAt: completed ? now : existing.completedAt
     };
     fields.forEach((name) => { record[name] = form.elements[name].value; });
     localStorage.setItem(recordKey(), JSON.stringify(record));
@@ -737,12 +753,14 @@
   const saveRecord = (completed = false) => {
     if (rejectFutureDate()) return false;
     const existing = JSON.parse(localStorage.getItem(recordKey()) || '{}');
+    const now = new Date().toISOString();
     const record = {
       ...existing,
       date: dateInput.value,
       checks: Object.fromEntries(checks.map((name) => [name, form.elements[name].checked])),
-      updatedAt: new Date().toISOString(),
-      completed: completed || existing.completed || false
+      updatedAt: now,
+      completed: completed || existing.completed || false,
+      completedAt: completed ? now : existing.completedAt
     };
     fields.forEach((name) => { record[name] = form.elements[name].value; });
     localStorage.setItem(recordKey(), JSON.stringify(record));
