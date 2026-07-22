@@ -27,6 +27,14 @@
   const hasGeneralConsent = () => localStorage.getItem(generalConsentKey) === 'granted';
   const hasDemographicConsent = () => localStorage.getItem(demographicConsentKey) === 'granted';
   const readProfile = () => { try { return JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { return null; } };
+  const migrateExistingPreferences = () => {
+    const profile = readProfile();
+    if (!profile) return;
+    if (localStorage.getItem(generalConsentKey) === null) localStorage.setItem(generalConsentKey, 'granted');
+    if (localStorage.getItem(demographicConsentKey) === null) {
+      localStorage.setItem(demographicConsentKey, profile.demographicSharing === false ? 'denied' : 'granted');
+    }
+  };
   const isAdult = (profile) => {
     const year = Number(profile?.birthYear);
     return Number.isInteger(year) && year >= 1900 && new Date().getFullYear() - year >= 18;
@@ -48,7 +56,8 @@
   };
   const start = async () => {
     const settings = await config();
-    if (started || !usable(settings)) return false;
+    if (started) return true;
+    if (!usable(settings)) return false;
     window.clarity = window.clarity || function clarity() { (window.clarity.q = window.clarity.q || []).push(arguments); };
     call('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
     const script = document.createElement('script');
@@ -77,6 +86,7 @@
   };
 
   window.KataAnalytics = { track, updateConsent, sendDemographics };
+  migrateExistingPreferences();
   track(`screen_open_${screenNames[page] || 'unknown'}`);
   const clickEvents = {
     's03-my-practice-daily.html': 'practice_open_daily',
