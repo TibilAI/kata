@@ -2,6 +2,7 @@ import * as pdfjsLib from './vendor/pdfjs/pdf.mjs';
 
 const screen = document.querySelector('[data-kata-reader]');
 if (screen) {
+  const track = (eventName) => window.KataAnalytics?.track(eventName);
   pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('./vendor/pdfjs/pdf.worker.min.mjs', import.meta.url).href;
 
   const canvas = screen.querySelector('[data-kata-canvas]');
@@ -45,6 +46,7 @@ if (screen) {
     if (text) notes[pageKey] = { text, updatedAt: new Date().toISOString() };
     else delete notes[pageKey];
     localStorage.setItem(readerNotesKey, JSON.stringify(notes));
+    if (announce) track('kata_note_saved');
     updateNoteIndicator();
     if (announce) noteStatus.textContent = text ? 'Saved on this device.' : 'Note cleared.';
   };
@@ -89,11 +91,13 @@ if (screen) {
     if (!documentProxy) return;
     if (rendering) { pendingPage = pageNumber; return; }
     rendering = true;
-    if (hasRenderedPage && currentPage !== pageNumber) {
+    const targetPage = Math.min(Math.max(pageNumber, 1), documentProxy.numPages);
+    const pageChanged = hasRenderedPage && currentPage !== targetPage;
+    if (pageChanged) {
       window.clearTimeout(noteSaveTimer);
       saveNote();
     }
-    currentPage = Math.min(Math.max(pageNumber, 1), documentProxy.numPages);
+    currentPage = targetPage;
     setControls();
     status.hidden = false;
     status.textContent = `Loading page ${currentPage}…`;
@@ -113,6 +117,7 @@ if (screen) {
       status.textContent = `Page ${currentPage} of ${documentProxy.numPages}`;
       status.hidden = true;
       localStorage.setItem(readerStateKey, JSON.stringify({ lastPage: currentPage, updatedAt: new Date().toISOString() }));
+      if (pageChanged) track('kata_page_changed');
       loadNote();
       hasRenderedPage = true;
     } catch (error) {
@@ -183,6 +188,7 @@ if (screen) {
     try {
       status.textContent = 'Opening your KATA…';
       documentProxy = await pdfjsLib.getDocument('../data/kata.pdf').promise;
+      track('kata_pdf_loaded');
       notes = readJson(readerNotesKey, {});
       setControls();
       notesButton.disabled = false;
@@ -196,6 +202,7 @@ if (screen) {
       pageInput.value = '';
       pageCountLabel.textContent = '—';
       status.textContent = 'The KATA PDF is not available yet. Add ui/data/kata.pdf, then reload this page.';
+      track('kata_pdf_unavailable');
       console.warn('KATA PDF could not be opened.', error);
     }
   })();

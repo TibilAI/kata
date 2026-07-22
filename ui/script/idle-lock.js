@@ -21,6 +21,7 @@
     if (locking) return;
     locking = true;
     clearSession();
+    window.KataAnalytics?.track('app_locked_for_inactivity');
     window.location.replace(signIn);
   };
   const schedule = () => {

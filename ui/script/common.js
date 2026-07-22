@@ -48,6 +48,7 @@
   const message = document.querySelector('#form-message');
   const otherTime = document.querySelector('#other-time');
   const birthYear = document.querySelector('#birth-year');
+  const demographicSharing = document.querySelector('#demographic-sharing');
   birthYear.max = String(new Date().getFullYear());
   const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
   const firstTimeSetup = !saved;
@@ -70,6 +71,9 @@
     form.elements.gender.value = saved.gender || '';
     form.elements.birthMonth.value = saved.birthMonth || '';
     birthYear.value = saved.birthYear || '';
+    const consentChoice = form.querySelector(`[name="analyticsConsent"][value="${saved.analyticsConsent || (localStorage.getItem('kata.analytics.generalConsent') === 'granted' ? 'yes' : 'no')}"]`);
+    if (consentChoice) consentChoice.checked = true;
+    demographicSharing.checked = saved.demographicSharing === true || localStorage.getItem('kata.analytics.demographicConsent') === 'granted';
     const dailyChoice = form.querySelector(`[name="dailyKataTime"][value="${CSS.escape(saved.dailyKataTime || '')}"]`);
     if (dailyChoice) dailyChoice.checked = true;
     otherTime.value = saved.otherTime || '';
@@ -80,6 +84,13 @@
   otherTime.addEventListener('focus', () => {
     form.querySelector('[name="dailyKataTime"][value="Other"]').checked = true;
   });
+  const syncDemographicControl = () => {
+    const consent = form.querySelector('[name="analyticsConsent"]:checked')?.value === 'yes';
+    demographicSharing.disabled = !consent;
+    if (!consent) demographicSharing.checked = false;
+  };
+  form.querySelectorAll('[name="analyticsConsent"]').forEach((input) => input.addEventListener('change', syncDemographicControl));
+  syncDemographicControl();
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -88,12 +99,14 @@
 
     const currentYear = new Date().getFullYear();
     const validBirthYear = /^\d{4}$/.test(String(data.birthYear || '')) && Number(data.birthYear) >= 1900 && Number(data.birthYear) <= currentYear;
-    if (!data.name?.trim() || !data.workType?.trim() || !data.gender || !data.birthMonth || !validBirthYear || !data.dailyKataTime || !data.commitment) {
+    if (!data.name?.trim() || !data.workType?.trim() || !data.gender || !data.birthMonth || !validBirthYear || !data.analyticsConsent || !data.dailyKataTime || !data.commitment) {
       message.textContent = 'Please complete each section to continue.';
+      window.KataAnalytics?.track('profile_setup_validation_failed');
       return;
     }
     if (data.dailyKataTime === 'Other' && !data.otherTime?.trim()) {
       message.textContent = 'Please tell us when you plan to do your Daily Kata.';
+      window.KataAnalytics?.track('profile_setup_validation_failed');
       otherTime.focus();
       return;
     }
@@ -102,9 +115,12 @@
     data.workType = data.workType.trim();
     data.otherTime = (data.otherTime || '').trim();
     data.birthYear = String(data.birthYear);
+    data.demographicSharing = data.analyticsConsent === 'yes' && form.elements.demographicSharing.checked;
     data.startedAt = saved?.startedAt || saved?.updatedAt || new Date().toISOString();
     data.updatedAt = new Date().toISOString();
     localStorage.setItem(storageKey, JSON.stringify(data));
+    window.KataAnalytics?.updateConsent(data.analyticsConsent === 'yes', data.demographicSharing);
+    window.KataAnalytics?.track(profileMode ? 'profile_updated' : 'profile_setup_completed');
     message.style.color = '#357047';
     message.textContent = profileMode ? 'Your profile has been saved.' : 'Your KATA practice has been saved.';
     window.setTimeout(() => {
@@ -189,21 +205,25 @@
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    window.KataAnalytics?.track('pin_change_submitted');
     const newPin = pinFor(groups[0]);
     const confirmation = pinFor(groups[1]);
     resetErrors(); message.classList.remove('success');
     if (!/^\d{4}$/.test(newPin)) {
+      window.KataAnalytics?.track('pin_change_failed');
       message.textContent = 'Enter a four-digit PIN using numbers only.';
       groups[0].querySelector('[data-pin-input]').focus();
       return;
     }
     if (newPin !== confirmation) {
+      window.KataAnalytics?.track('pin_change_failed');
       message.textContent = 'The PINs do not match. Please try again.';
       [...groups[1].querySelectorAll('[data-pin-input]')].forEach((input) => input.setAttribute('aria-invalid', 'true'));
       groups[1].querySelector('[data-pin-input]').focus();
       return;
     }
     localStorage.setItem('kata.security.pin', newPin);
+    window.KataAnalytics?.track('pin_change_completed');
     sessionStorage.removeItem('kata.session.unlocked');
     sessionStorage.removeItem('kata.session.expiresAt');
     message.textContent = 'Your PIN has been updated.';
@@ -237,8 +257,10 @@
   const clear = () => inputs.forEach((input) => { input.value = ''; });
   const submitWhenReady = () => {
     if (enteredPin().length !== 4) return;
+    window.KataAnalytics?.track('pin_sign_in_attempted');
     const savedPin = localStorage.getItem('kata.security.pin');
     if (enteredPin() !== savedPin) {
+      window.KataAnalytics?.track('pin_sign_in_failed');
       message.textContent = 'That PIN is not correct. Please try again.';
       clear();
       inputs[0].focus();
@@ -247,6 +269,7 @@
     const autoLockRaw = localStorage.getItem('kata.security.autoLockMinutes') || '';
     const autoLockMinutes = /^[1-5]$/.test(autoLockRaw) ? Number(autoLockRaw) : 5;
     sessionStorage.setItem('kata.session.unlocked', 'true');
+    window.KataAnalytics?.track('pin_sign_in_succeeded');
     sessionStorage.setItem('kata.session.expiresAt', String(Date.now() + (autoLockMinutes * 60 * 1000)));
     message.textContent = '';
     const requested = new URLSearchParams(window.location.search).get('next');
@@ -295,18 +318,20 @@
   const message = form.querySelector('[data-forgot-pin-message]');
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    window.KataAnalytics?.track('pin_recovery_verification_attempted');
     const saved = JSON.parse(localStorage.getItem('kata.setup') || 'null');
     const supplied = Object.fromEntries(new FormData(form));
     const currentYear = new Date().getFullYear();
-    if (!saved) { message.textContent = 'No profile details are available to verify.'; return; }
+    if (!saved) { message.textContent = 'No profile details are available to verify.'; window.KataAnalytics?.track('pin_recovery_verification_failed'); return; }
     const savedDemographicsPresent = saved.gender && saved.birthMonth && /^\d{4}$/.test(String(saved.birthYear || ''));
-    if (!savedDemographicsPresent) { message.textContent = 'Add your gender and birth details in My Profile before resetting your PIN.'; return; }
+    if (!savedDemographicsPresent) { message.textContent = 'Add your gender and birth details in My Profile before resetting your PIN.'; window.KataAnalytics?.track('pin_recovery_verification_failed'); return; }
     const validBirthYear = /^\d{4}$/.test(String(supplied.birthYear || '')) && Number(supplied.birthYear) >= 1900 && Number(supplied.birthYear) <= currentYear;
     const allProvided = supplied.gender && supplied.birthMonth && validBirthYear;
-    if (!allProvided) { message.textContent = 'Please complete each profile detail to continue.'; return; }
+    if (!allProvided) { message.textContent = 'Please complete each profile detail to continue.'; window.KataAnalytics?.track('pin_recovery_verification_failed'); return; }
     const matches = supplied.gender === saved.gender && supplied.birthMonth === saved.birthMonth && String(supplied.birthYear) === String(saved.birthYear);
-    if (!matches) { message.textContent = 'We could not verify those details. Please try again.'; return; }
+    if (!matches) { message.textContent = 'We could not verify those details. Please try again.'; window.KataAnalytics?.track('pin_recovery_verification_failed'); return; }
     sessionStorage.setItem('kata.security.resetApproved', 'true');
+    window.KataAnalytics?.track('pin_recovery_verification_succeeded');
     window.location.href = 's12-change-password.html?mode=reset';
   });
 })();
@@ -336,6 +361,7 @@
     if (menu.hidden) return;
     menu.hidden = true;
     trigger.setAttribute('aria-expanded', 'false');
+    window.KataAnalytics?.track('more_menu_closed');
     if (returnFocus) trigger.focus();
   });
   triggers.forEach((trigger, index) => {
@@ -357,6 +383,7 @@
       menu.style.top = `${Math.max(8, bounds.top - menu.offsetHeight - 8)}px`;
       menu.style.left = `${Math.max(8, bounds.right - menu.offsetWidth)}px`;
       trigger.setAttribute('aria-expanded', 'true');
+      window.KataAnalytics?.track('more_menu_opened');
       menu.querySelector('a').focus();
     });
     menu.querySelector('[data-lock-app]').addEventListener('click', () => {
@@ -364,6 +391,7 @@
       const next = `${page}${window.location.search}`;
       sessionStorage.removeItem('kata.session.unlocked');
       sessionStorage.removeItem('kata.session.expiresAt');
+      window.KataAnalytics?.track('app_locked_manually');
       closeMenus(false);
       window.location.replace(`s13-enter-password.html?next=${encodeURIComponent(next)}`);
     });
@@ -384,6 +412,12 @@
   set('[data-profile-gender]', profile.gender);
   set('[data-profile-birth-month]', profile.birthMonth);
   set('[data-profile-birth-year]', profile.birthYear);
+  const analyticsStatus = document.querySelector('[data-analytics-status]');
+  if (analyticsStatus) {
+    const usage = profile.analyticsConsent === 'yes' || localStorage.getItem('kata.analytics.generalConsent') === 'granted';
+    const demographics = profile.demographicSharing === true || localStorage.getItem('kata.analytics.demographicConsent') === 'granted';
+    analyticsStatus.textContent = usage ? (demographics ? 'Usage analytics and demographics shared' : 'Usage analytics only') : 'Usage analytics off';
+  }
   const timing = profile.dailyKataTime === 'Other' ? (profile.otherTime ? `Other: ${profile.otherTime}` : 'Other') : profile.dailyKataTime;
   set('[data-profile-timing]', timing);
   set('[data-profile-commitment]', profile.commitment);
@@ -409,6 +443,7 @@
     }
     current = next;
     localStorage.setItem(key, String(next));
+    window.KataAnalytics?.track('auto_lock_changed');
     if (sessionStorage.getItem('kata.session.unlocked') === 'true') {
       sessionStorage.setItem('kata.session.expiresAt', String(Date.now() + (next * 60 * 1000)));
       window.dispatchEvent(new CustomEvent('kata:autolockchange'));
@@ -502,7 +537,7 @@
     meta.append(type, time); copy.append(meta, preview);
     const chevron = document.createElement('img'); chevron.className = 'entry-chevron'; chevron.src = '../style/icons/icon-entry-chevron.png'; chevron.alt = '';
     button.append(date, art, copy, chevron);
-    if (!isPractice) button.addEventListener('click', () => openComposer(entry, button));
+    if (!isPractice) button.addEventListener('click', () => { window.KataAnalytics?.track('reflection_opened'); openComposer(entry, button); });
     return button;
   };
   const emptyNode = (text) => {
@@ -543,20 +578,23 @@
     searchInput.value = '';
     toolbar.classList.remove('search-open');
     render();
+    window.KataAnalytics?.track('reflection_search_closed');
     if (returnFocus) searchToggle.focus();
   };
   const openSearch = () => {
     searchInput.hidden = false;
     toolbar.classList.add('search-open');
     searchInput.focus();
+    window.KataAnalytics?.track('reflection_search_opened');
   };
   searchToggle.addEventListener('click', () => { if (searchInput.hidden) openSearch(); else closeSearch(); });
   searchInput.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeSearch(); });
   document.addEventListener('pointerdown', (event) => {
     if (!searchInput.hidden && !searchInput.contains(event.target) && !searchToggle.contains(event.target)) closeSearch(false);
   });
-  filterToggle.addEventListener('click', () => { showArchive = !showArchive; filterToggle.setAttribute('aria-pressed', String(showArchive)); render(); });
-  typeSelect.addEventListener('change', render); searchInput.addEventListener('input', render);
+  filterToggle.addEventListener('click', () => { showArchive = !showArchive; filterToggle.setAttribute('aria-pressed', String(showArchive)); window.KataAnalytics?.track('reflection_filter_changed'); render(); });
+  typeSelect.addEventListener('change', () => { window.KataAnalytics?.track('reflection_filter_changed'); render(); });
+  searchInput.addEventListener('input', () => { if (searchInput.value.trim()) window.KataAnalytics?.track('reflection_search_used'); render(); });
   const openComposer = (entry = null, trigger = null) => {
     editingReflectionId = entry?.id || null;
     composerTrigger = trigger;
@@ -577,7 +615,7 @@
     composerDate.hidden = true;
     composerTrigger?.focus();
   };
-  addButton.addEventListener('click', () => openComposer(null, addButton));
+  addButton.addEventListener('click', () => { window.KataAnalytics?.track('reflection_composer_opened'); openComposer(null, addButton); });
   composerClose.addEventListener('click', closeComposer);
   composer.addEventListener('cancel', (event) => { event.preventDefault(); closeComposer(); });
   composerForm.addEventListener('submit', (event) => {
@@ -587,11 +625,13 @@
     const content = composerForm.elements.content.value.trim();
     if (!content) return;
     const reflections = safeParse(localStorage.getItem(reflectionKey), []);
-    if (editingReflectionId) {
+    const wasEditing = Boolean(editingReflectionId);
+    if (wasEditing) {
       const index = reflections.findIndex((entry) => entry.id === editingReflectionId);
       if (index !== -1) reflections[index] = { ...reflections[index], content, updatedAt: new Date().toISOString() };
     } else reflections.push({ id: crypto.randomUUID?.() || String(Date.now()), content, createdAt: new Date().toISOString() });
     localStorage.setItem(reflectionKey, JSON.stringify(reflections));
+    window.KataAnalytics?.track(wasEditing ? 'reflection_updated' : 'reflection_created');
     const trigger = composerTrigger;
     composer.close(); composerForm.reset(); editingReflectionId = null; composerDate.hidden = true; render(); trigger?.focus();
   });
@@ -604,6 +644,7 @@
 
   const monthInput = document.querySelector('#monthly-date');
   const message = document.querySelector('#monthly-message');
+  let saveTimer;
   const fields = ['problemSolving', 'success', 'options', 'approach', 'actualWork', 'tradeoffs', 'impact', 'nextImprovement'];
   const maxMonth = new Date().toISOString().slice(0, 7);
   const parameters = new URLSearchParams(window.location.search);
@@ -647,15 +688,17 @@
   };
 
   loadRecord();
-  form.addEventListener('input', () => saveRecord());
-  form.addEventListener('change', () => saveRecord());
+  const scheduleSavedEvent = () => { window.clearTimeout(saveTimer); saveTimer = window.setTimeout(() => window.KataAnalytics?.track('monthly_entry_saved'), 800); };
+  form.addEventListener('input', () => { saveRecord(); scheduleSavedEvent(); });
+  form.addEventListener('change', () => { saveRecord(); scheduleSavedEvent(); });
   monthInput.addEventListener('change', () => {
-    if (!rejectFutureMonth()) loadRecord();
+    if (!rejectFutureMonth()) { window.KataAnalytics?.track('monthly_month_changed'); loadRecord(); }
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!saveRecord(true)) return;
     localStorage.setItem('kata.completed.monthly', new Date().toISOString());
+    window.KataAnalytics?.track('monthly_entry_completed');
     message.style.color = '#357047';
     message.textContent = 'Completed Monthly Practice.';
   });
@@ -667,6 +710,7 @@
 
   const weekInput = document.querySelector('#weekly-date');
   const message = document.querySelector('#weekly-message');
+  let saveTimer;
   const fields = ['avoidThinking', 'realValue', 'patterns', 'specificAction', 'nextTask'];
   const checks = ['understandingProblems', 'makingDecisions', 'creatingImpact', 'learningOutcomes'];
   const currentWeek = () => {
@@ -721,15 +765,17 @@
   };
 
   loadRecord();
-  form.addEventListener('input', () => saveRecord());
-  form.addEventListener('change', () => saveRecord());
+  const scheduleSavedEvent = () => { window.clearTimeout(saveTimer); saveTimer = window.setTimeout(() => window.KataAnalytics?.track('weekly_entry_saved'), 800); };
+  form.addEventListener('input', () => { saveRecord(); scheduleSavedEvent(); });
+  form.addEventListener('change', () => { saveRecord(); scheduleSavedEvent(); });
   weekInput.addEventListener('change', () => {
-    if (!rejectFutureWeek()) loadRecord();
+    if (!rejectFutureWeek()) { window.KataAnalytics?.track('weekly_week_changed'); loadRecord(); }
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!saveRecord(true)) return;
     localStorage.setItem('kata.completed.weekly', new Date().toISOString());
+    window.KataAnalytics?.track('weekly_entry_completed');
     message.style.color = '#357047';
     message.textContent = 'Completed Weekly Practice.';
   });
@@ -741,6 +787,7 @@
 
   const dateInput = document.querySelector('#daily-date');
   const message = document.querySelector('#daily-message');
+  let saveTimer;
   const fields = ['problem', 'assumption', 'decision', 'impact', 'tomorrow'];
   const checks = ['understood', 'questioned', 'decisionClear', 'impactThought', 'improvement'];
   const today = new Date().toISOString().slice(0, 10);
@@ -785,15 +832,17 @@
   };
 
   loadRecord();
-  form.addEventListener('input', () => saveRecord());
-  form.addEventListener('change', () => saveRecord());
+  const scheduleSavedEvent = () => { window.clearTimeout(saveTimer); saveTimer = window.setTimeout(() => window.KataAnalytics?.track('daily_entry_saved'), 800); };
+  form.addEventListener('input', () => { saveRecord(); scheduleSavedEvent(); });
+  form.addEventListener('change', () => { saveRecord(); scheduleSavedEvent(); });
   dateInput.addEventListener('change', () => {
-    if (!rejectFutureDate()) loadRecord();
+    if (!rejectFutureDate()) { window.KataAnalytics?.track('daily_date_changed'); loadRecord(); }
   });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!saveRecord(true)) return;
     localStorage.setItem('kata.completed.daily', `${dateInput.value}T12:00:00`);
+    window.KataAnalytics?.track('daily_entry_completed');
     message.style.color = '#357047';
     message.textContent = 'Completed Daily Kata.';
   });
@@ -933,12 +982,19 @@
     const asOf = document.querySelector('[data-flow-as-of]');
     requestAnimationFrame(() => {
       window.setTimeout(() => {
-        const { flowState } = window.KataFlow.calculateOnOpen();
-        const timestamp = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(flowState.lastComputedAt));
-        asOf.textContent = `As of ${timestamp}`;
-        asOf.hidden = false;
-        loader.hidden = true;
-        dashboard.hidden = false;
+        window.KataAnalytics?.track('flow_calculation_started');
+        try {
+          const { flowState } = window.KataFlow.calculateOnOpen();
+          const timestamp = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(flowState.lastComputedAt));
+          asOf.textContent = `As of ${timestamp}`;
+          asOf.hidden = false;
+          loader.hidden = true;
+          dashboard.hidden = false;
+          window.KataAnalytics?.track('flow_calculation_completed');
+        } catch (error) {
+          window.KataAnalytics?.track('flow_calculation_failed');
+          console.error('KATA Flow calculation failed.', error);
+        }
       }, 350);
     });
   }
