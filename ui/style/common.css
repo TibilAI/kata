@@ -53,6 +53,22 @@ body {
 .pwa-update-notice { position: fixed; z-index: 30; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 14px; max-width: min(92vw, 360px); padding: 13px 14px 13px 17px; border: 1px solid #dfd5cc; border-radius: 12px; background: #fffdfb; box-shadow: 0 9px 24px rgb(37 31 26 / 20%); color: var(--ink); font-size: 14px; }
 .pwa-update-notice button { min-height: 34px; padding: 7px 12px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font: 700 13px Avenir Next, Avenir, sans-serif; cursor: pointer; }
 .pwa-update-notice button:focus-visible { outline: 3px solid #24558b; outline-offset: 2px; }
+.install-kata-cta { position: fixed; z-index: 15; right: max(16px, env(safe-area-inset-right)); bottom: max(118px, calc(104px + env(safe-area-inset-bottom))); display: flex; align-items: center; overflow: hidden; border: 1px solid #dfd5cc; border-radius: 24px; background: #fffdfb; box-shadow: 0 8px 20px rgb(37 31 26 / 18%); }
+.install-kata-cta[hidden] { display: none; }
+.install-kata-cta > button { border: 0; background: transparent; color: var(--ink); font: 700 14px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.install-kata-cta > [data-request-install-kata] { display: inline-flex; min-height: 46px; align-items: center; gap: 8px; padding: 7px 8px 7px 13px; }
+.install-kata-cta img { width: 28px; height: 28px; border-radius: 7px; object-fit: cover; }
+.install-kata-cta > [data-dismiss-install-kata] { min-width: 37px; min-height: 46px; padding: 0 12px 2px 4px; color: #6b6967; font-size: 24px; font-weight: 400; }
+.install-kata-cta > button:focus-visible, .pwa-install-dialog button:focus-visible { outline: 3px solid #24558b; outline-offset: -3px; }
+.pwa-install-dialog { width: min(90vw, 360px); border: 0; border-radius: 20px; box-shadow: 0 18px 50px rgb(0 0 0 / 23%); }
+.pwa-install-dialog::backdrop { background: rgb(23 22 21 / 38%); }
+.pwa-install-dialog section { position: relative; padding: 30px 27px 25px; text-align: center; }
+.pwa-install-dialog img { width: 64px; height: 64px; border-radius: 16px; object-fit: cover; }
+.pwa-install-dialog h2 { margin: 16px 0 11px; font: 400 30px/1.1 Georgia, Times New Roman, serif; }
+.pwa-install-dialog p { margin: 0; color: #5f6063; font-size: 16px; line-height: 1.5; }
+.pwa-install-dialog-close { position: absolute; top: 10px; right: 14px; border: 0; background: transparent; color: #555; font-size: 29px; cursor: pointer; }
+.pwa-install-dialog-done { min-height: 43px; margin-top: 22px; padding: 8px 20px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font: 700 15px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.pwa-install-toast { position: fixed; z-index: 30; right: 16px; bottom: max(118px, calc(104px + env(safe-area-inset-bottom))); max-width: min(330px, calc(100vw - 32px)); margin: 0; padding: 14px 17px; border: 1px solid #d6e8d9; border-radius: 12px; background: #f2faf3; box-shadow: 0 8px 22px rgb(44 67 46 / 18%); color: #2e6840; font-size: 14px; line-height: 1.4; }
 @media (max-width: 540px) { .app-entry-screen { min-height: 100vh; box-shadow: none; } }
 
 .brand { text-align: center; }

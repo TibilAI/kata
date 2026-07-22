@@ -396,12 +396,16 @@
     const menu = document.createElement('div');
     const menuId = `more-menu-${index}`;
     menu.id = menuId; menu.className = 'more-popup'; menu.hidden = true; menu.setAttribute('role', 'menu');
-    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a><button type="button" role="menuitem" data-export-my-data>Export My Data</button><button type="button" role="menuitem" data-lock-app><span class="more-lock-icon" aria-hidden="true"></span>Lock app</button>';
+    menu.innerHTML = '<a href="s10-my-profile.html" role="menuitem">My Profile</a><a href="s11-about.html" role="menuitem">About</a><button type="button" role="menuitem" data-export-my-data>Export My Data</button><button type="button" role="menuitem" data-install-kata-menu hidden>Install KATA</button><button type="button" role="menuitem" data-lock-app><span class="more-lock-icon" aria-hidden="true"></span>Lock app</button>';
     document.body.append(menu);
     trigger.setAttribute('aria-haspopup', 'menu');
     trigger.setAttribute('aria-controls', menuId);
     trigger.setAttribute('aria-expanded', 'false');
     menus.push({ trigger, menu });
+    const installButton = menu.querySelector('[data-install-kata-menu]');
+    const syncInstallAction = (state = window.KataPWA?.getInstallState?.()) => { installButton.hidden = !state?.available || state.standalone; };
+    syncInstallAction();
+    document.addEventListener('kata:pwa-install-state', (event) => syncInstallAction(event.detail));
     trigger.addEventListener('click', () => {
       const wasOpen = !menu.hidden;
       closeMenus(false);
@@ -428,6 +432,10 @@
     menu.querySelector('[data-export-my-data]').addEventListener('click', async () => {
       closeMenus(false);
       await exportData();
+    });
+    installButton.addEventListener('click', () => {
+      closeMenus(false);
+      window.KataPWA?.requestInstall('more');
     });
   });
   document.addEventListener('pointerdown', (event) => {
