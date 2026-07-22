@@ -9,7 +9,7 @@
   let profile = null;
   try { profile = JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { profile = null; }
   const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
-  const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
+  const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.gender) && hasText(profile.birthMonth) && /^\d{4}$/.test(String(profile.birthYear || '')) && Number(profile.birthYear) >= 1900 && Number(profile.birthYear) <= new Date().getFullYear() && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
   const expiresAt = Number(sessionStorage.getItem('kata.session.expiresAt'));
   const unlocked = sessionStorage.getItem('kata.session.unlocked') === 'true' && Number.isFinite(expiresAt) && expiresAt > Date.now();
 

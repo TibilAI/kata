@@ -3,7 +3,7 @@
   let profile = null;
   try { profile = JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { profile = null; }
   const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
-  const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
+  const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.gender) && hasText(profile.birthMonth) && /^\d{4}$/.test(String(profile.birthYear || '')) && Number(profile.birthYear) >= 1900 && Number(profile.birthYear) <= new Date().getFullYear() && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
   if (!validProfile) {
     window.location.replace('html/s01-kata.html');
     return;
@@ -47,6 +47,8 @@
   const storageKey = 'kata.setup';
   const message = document.querySelector('#form-message');
   const otherTime = document.querySelector('#other-time');
+  const birthYear = document.querySelector('#birth-year');
+  birthYear.max = String(new Date().getFullYear());
   const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
   const firstTimeSetup = !saved;
   const parameters = new URLSearchParams(window.location.search);
@@ -65,6 +67,9 @@
   if (saved) {
     form.elements.name.value = saved.name || '';
     form.elements.workType.value = saved.workType || '';
+    form.elements.gender.value = saved.gender || '';
+    form.elements.birthMonth.value = saved.birthMonth || '';
+    birthYear.value = saved.birthYear || '';
     const dailyChoice = form.querySelector(`[name="dailyKataTime"][value="${CSS.escape(saved.dailyKataTime || '')}"]`);
     if (dailyChoice) dailyChoice.checked = true;
     otherTime.value = saved.otherTime || '';
@@ -81,7 +86,9 @@
     message.textContent = '';
     const data = Object.fromEntries(new FormData(form));
 
-    if (!data.name?.trim() || !data.workType?.trim() || !data.dailyKataTime || !data.commitment) {
+    const currentYear = new Date().getFullYear();
+    const validBirthYear = /^\d{4}$/.test(String(data.birthYear || '')) && Number(data.birthYear) >= 1900 && Number(data.birthYear) <= currentYear;
+    if (!data.name?.trim() || !data.workType?.trim() || !data.gender || !data.birthMonth || !validBirthYear || !data.dailyKataTime || !data.commitment) {
       message.textContent = 'Please complete each section to continue.';
       return;
     }
@@ -94,6 +101,7 @@
     data.name = data.name.trim();
     data.workType = data.workType.trim();
     data.otherTime = (data.otherTime || '').trim();
+    data.birthYear = String(data.birthYear);
     data.startedAt = saved?.startedAt || saved?.updatedAt || new Date().toISOString();
     data.updatedAt = new Date().toISOString();
     localStorage.setItem(storageKey, JSON.stringify(data));
@@ -113,7 +121,9 @@
   const pinMode = new URLSearchParams(window.location.search).get('mode');
   const resetMode = pinMode === 'reset';
   const initialMode = pinMode === 'initial';
-  if (initialMode && !localStorage.getItem('kata.setup')) {
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { return null; } })();
+  const profileIsComplete = profile && typeof profile.name === 'string' && profile.name.trim() && typeof profile.workType === 'string' && profile.workType.trim() && typeof profile.gender === 'string' && profile.gender.trim() && typeof profile.birthMonth === 'string' && profile.birthMonth.trim() && /^\d{4}$/.test(String(profile.birthYear || '')) && Number(profile.birthYear) >= 1900 && Number(profile.birthYear) <= new Date().getFullYear() && typeof profile.dailyKataTime === 'string' && profile.dailyKataTime.trim() && typeof profile.commitment === 'string' && profile.commitment.trim() && (profile.dailyKataTime !== 'Other' || (typeof profile.otherTime === 'string' && profile.otherTime.trim()));
+  if (initialMode && !profileIsComplete) {
     window.location.replace('s01-kata.html');
     return;
   }
@@ -211,7 +221,9 @@
 (() => {
   const form = document.querySelector('[data-enter-pin-form]');
   if (!form) return;
-  if (!localStorage.getItem('kata.setup')) {
+  const profile = (() => { try { return JSON.parse(localStorage.getItem('kata.setup') || 'null'); } catch (_) { return null; } })();
+  const profileIsComplete = profile && typeof profile.name === 'string' && profile.name.trim() && typeof profile.workType === 'string' && profile.workType.trim() && typeof profile.gender === 'string' && profile.gender.trim() && typeof profile.birthMonth === 'string' && profile.birthMonth.trim() && /^\d{4}$/.test(String(profile.birthYear || '')) && Number(profile.birthYear) >= 1900 && Number(profile.birthYear) <= new Date().getFullYear() && typeof profile.dailyKataTime === 'string' && profile.dailyKataTime.trim() && typeof profile.commitment === 'string' && profile.commitment.trim() && (profile.dailyKataTime !== 'Other' || (typeof profile.otherTime === 'string' && profile.otherTime.trim()));
+  if (!profileIsComplete) {
     window.location.replace('s01-kata.html');
     return;
   }
@@ -281,16 +293,18 @@
     return;
   }
   const message = form.querySelector('[data-forgot-pin-message]');
-  const normalize = (value) => (value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase();
-  form.querySelector('#reset-other-time').addEventListener('focus', () => { form.querySelector('[name="dailyKataTime"][value="Other"]').checked = true; });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const saved = JSON.parse(localStorage.getItem('kata.setup') || 'null');
     const supplied = Object.fromEntries(new FormData(form));
+    const currentYear = new Date().getFullYear();
     if (!saved) { message.textContent = 'No profile details are available to verify.'; return; }
-    const allProvided = supplied.name?.trim() && supplied.workType?.trim() && supplied.dailyKataTime && supplied.commitment && (supplied.dailyKataTime !== 'Other' || supplied.otherTime?.trim());
+    const savedDemographicsPresent = saved.gender && saved.birthMonth && /^\d{4}$/.test(String(saved.birthYear || ''));
+    if (!savedDemographicsPresent) { message.textContent = 'Add your gender and birth details in My Profile before resetting your PIN.'; return; }
+    const validBirthYear = /^\d{4}$/.test(String(supplied.birthYear || '')) && Number(supplied.birthYear) >= 1900 && Number(supplied.birthYear) <= currentYear;
+    const allProvided = supplied.gender && supplied.birthMonth && validBirthYear;
     if (!allProvided) { message.textContent = 'Please complete each profile detail to continue.'; return; }
-    const matches = normalize(supplied.name) === normalize(saved.name) && normalize(supplied.workType) === normalize(saved.workType) && supplied.dailyKataTime === saved.dailyKataTime && (supplied.dailyKataTime !== 'Other' || normalize(supplied.otherTime) === normalize(saved.otherTime)) && supplied.commitment === saved.commitment;
+    const matches = supplied.gender === saved.gender && supplied.birthMonth === saved.birthMonth && String(supplied.birthYear) === String(saved.birthYear);
     if (!matches) { message.textContent = 'We could not verify those details. Please try again.'; return; }
     sessionStorage.setItem('kata.security.resetApproved', 'true');
     window.location.href = 's12-change-password.html?mode=reset';
@@ -367,6 +381,9 @@
   const set = (selector, value) => { const element = document.querySelector(selector); if (element) element.textContent = value || 'Not set'; };
   set('[data-profile-name]', profile.name);
   set('[data-profile-work]', profile.workType);
+  set('[data-profile-gender]', profile.gender);
+  set('[data-profile-birth-month]', profile.birthMonth);
+  set('[data-profile-birth-year]', profile.birthYear);
   const timing = profile.dailyKataTime === 'Other' ? (profile.otherTime ? `Other: ${profile.otherTime}` : 'Other') : profile.dailyKataTime;
   set('[data-profile-timing]', timing);
   set('[data-profile-commitment]', profile.commitment);

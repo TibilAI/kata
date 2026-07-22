@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fbf8f4">
     <title>KATA | Before You Begin</title>
-    <link rel="stylesheet" href="../style/common.css?v=7">
-    <script src="../script/access-guard.js"></script>
+    <link rel="stylesheet" href="../style/common.css?v=9">
+    <script src="../script/access-guard.js?v=2"></script>
   </head>
   <body class="kata-page">
     <main class="app-shell" aria-labelledby="page-title">
@@ -33,6 +33,32 @@
             <span class="field-hint">(e.g., build, sell, design, operate)</span>
             <input id="work-type" name="workType" type="text" autocomplete="organization-title" required>
           </div>
+
+          <fieldset class="demographic-group" id="section-demographics">
+            <legend>About me</legend>
+            <div class="field-group">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" autocomplete="sex" required>
+                <option value="" selected disabled>Select gender</option>
+                <option value="Woman">Woman</option>
+                <option value="Man">Man</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="Self-describe">Self-describe</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="birth-month">Birth month</label>
+              <select id="birth-month" name="birthMonth" autocomplete="bday-month" required>
+                <option value="" selected disabled>Select month</option>
+                <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="birth-year">Birth year</label>
+              <input id="birth-year" name="birthYear" type="number" inputmode="numeric" autocomplete="bday-year" min="1900" max="2026" step="1" placeholder="YYYY" required>
+            </div>
+          </fieldset>
 
           <fieldset class="choice-group" id="section-timing">
             <legend>When will I do my Daily Kata?</legend>
@@ -76,6 +102,6 @@
         </footer>
       </section>
     </main>
-    <script src="../script/common.js?v=10"></script>
+    <script src="../script/common.js?v=12"></script>
   </body>
 </html>
