@@ -497,6 +497,45 @@
 })();
 
 (() => {
+  const dialog = document.querySelector('[data-delete-data-dialog]');
+  const open = document.querySelector('[data-open-delete-dialog]');
+  if (!dialog || !open) return;
+  const confirmation = dialog.querySelector('[data-delete-confirmation]');
+  const confirm = dialog.querySelector('[data-confirm-delete]');
+  const cancel = dialog.querySelector('[data-cancel-delete]');
+  const message = dialog.querySelector('[data-delete-data-message]');
+  const close = () => {
+    dialog.close?.();
+    dialog.removeAttribute('open');
+    confirmation.value = '';
+    confirm.disabled = true;
+    message.textContent = '';
+    open.focus();
+  };
+  open.addEventListener('click', () => {
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+    confirmation.value = '';
+    confirm.disabled = true;
+    message.textContent = '';
+    confirmation.focus();
+  });
+  confirmation.addEventListener('input', () => {
+    confirm.disabled = confirmation.value !== 'DELETE';
+    message.textContent = confirm.disabled && confirmation.value ? 'Type DELETE exactly to enable deletion.' : '';
+  });
+  cancel.addEventListener('click', close);
+  dialog.addEventListener('cancel', (event) => { event.preventDefault(); close(); });
+  dialog.addEventListener('click', (event) => { if (event.target === dialog) close(); });
+  confirm.addEventListener('click', () => {
+    if (confirmation.value !== 'DELETE') return;
+    Object.keys(localStorage).filter((key) => key.startsWith('kata.')).forEach((key) => localStorage.removeItem(key));
+    Object.keys(sessionStorage).filter((key) => key.startsWith('kata.')).forEach((key) => sessionStorage.removeItem(key));
+    window.location.replace('../index.html');
+  });
+})();
+
+(() => {
   const fields = document.querySelectorAll('.reflection-form textarea');
   if (!fields.length) return;
 

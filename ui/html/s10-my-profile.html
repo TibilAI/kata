@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fbf8f4">
     <title>KATA | My Profile</title>
-    <link rel="stylesheet" href="../style/common.css?v=12">
+    <link rel="stylesheet" href="../style/common.css?v=13">
     <script src="../script/access-guard.js?v=2"></script>
   </head>
   <body class="kata-page profile-page">
@@ -44,6 +44,12 @@
 
         <a class="password-row" href="s12-change-password.html"><img src="../style/icons/icon-profile-lock.png" alt=""><span>Change Password</span><img src="../style/icons/icon-profile-chevron.png" alt=""></a>
 
+        <section class="danger-zone" aria-labelledby="danger-zone-title">
+          <h2 id="danger-zone-title">Danger zone</h2>
+          <p>Clear all data and delete your profile from this browser.</p>
+          <button type="button" data-open-delete-dialog>Clear all data and delete</button>
+        </section>
+
         <nav class="bottom-nav" aria-label="Primary navigation">
           <a class="nav-link" href="s02-my-practice.html"><img class="nav-icon-image" src="../style/icons/nav-practice-gray.png" alt=""><span>My Practice</span></a>
           <a class="nav-link" href="s06-my-journey.html"><img class="nav-icon-image" src="../style/icons/nav-journey.png" alt=""><span>My Journey</span></a>
@@ -52,8 +58,19 @@
         </nav>
       </section>
     </main>
+    <dialog class="delete-data-dialog" data-delete-data-dialog aria-labelledby="delete-data-title" aria-describedby="delete-data-description">
+      <section>
+        <h2 id="delete-data-title">Delete all KATA data?</h2>
+        <p id="delete-data-description">This permanently removes your profile, PIN, practice entries, reflections, Flow data, notes, and preferences from this browser.</p>
+        <p>Exported files and historical Microsoft Clarity data are not removed.</p>
+        <label for="delete-confirmation">Type <strong>DELETE</strong> to continue.</label>
+        <input id="delete-confirmation" data-delete-confirmation type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="delete-data-message">
+        <p class="delete-data-message" id="delete-data-message" data-delete-data-message aria-live="polite"></p>
+        <div class="delete-data-actions"><button type="button" data-cancel-delete>Cancel</button><button type="button" data-confirm-delete disabled>Delete all data</button></div>
+      </section>
+    </dialog>
     <script src="../script/clarity.js?v=3"></script>
-    <script src="../script/common.js?v=17"></script>
+    <script src="../script/common.js?v=18"></script>
     <script src="../script/idle-lock.js"></script>
   </body>
 </html>

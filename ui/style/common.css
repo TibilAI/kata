@@ -225,10 +225,29 @@ body {
 .password-row { display: grid; grid-template-columns: 74px 1fr 26px; align-items: center; gap: 16px; margin: 0 22px 30px; padding: 17px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); color: var(--ink); font-size: 18px; font-weight: 600; text-decoration: none; }
 .password-row img { width: 55px; height: 55px; object-fit: contain; }
 .password-row img:last-child { width: 22px; height: 22px; }
+.danger-zone { margin: 0 22px 30px; padding: 21px 22px; border: 1px solid #e6bdb3; border-radius: 18px; background: #fff8f6; }
+.danger-zone h2 { margin: 0 0 9px; color: #9d341f; font-size: 18px; }
+.danger-zone p { margin: 0 0 17px; color: #6b4d48; font-size: 15px; line-height: 1.4; }
+.danger-zone button { width: 100%; min-height: 46px; border: 1px solid #b83d28; border-radius: 11px; background: transparent; color: #a63220; font: 700 15px/1 Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.danger-zone button:hover, .danger-zone button:focus-visible { background: #fff0ec; outline: 2px solid #b83d28; outline-offset: 2px; }
+.delete-data-dialog { width: min(92vw, 430px); padding: 0; border: 0; border-radius: 20px; box-shadow: 0 18px 50px rgb(0 0 0 / 23%); }
+.delete-data-dialog::backdrop { background: rgb(23 22 21 / 44%); }
+.delete-data-dialog section { padding: 30px 26px 25px; }
+.delete-data-dialog h2 { margin: 0 0 16px; color: #9d341f; font: 400 30px/1.12 Georgia, Times New Roman, serif; }
+.delete-data-dialog p { margin: 0 0 13px; color: #555257; font-size: 16px; line-height: 1.45; }
+.delete-data-dialog label { display: block; margin-top: 23px; color: #343235; font-size: 16px; }
+.delete-data-dialog input { width: 100%; height: 48px; margin-top: 10px; padding: 8px 12px; border: 1px solid #cfc8c3; border-radius: 10px; color: var(--ink); font: 600 17px/1 Avenir Next, Avenir, sans-serif; outline: none; }
+.delete-data-dialog input:focus { border-color: #b83d28; box-shadow: 0 0 0 2px rgb(184 61 40 / 14%); }
+.delete-data-message { min-height: 18px; margin: 8px 0 0 !important; color: #a63220 !important; font-size: 13px !important; }
+.delete-data-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 23px; }
+.delete-data-actions button { min-height: 48px; border-radius: 11px; font: 700 15px/1 Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.delete-data-actions [data-cancel-delete] { border: 1px solid #cfc8c3; background: #fff; color: #4f4b4d; }
+.delete-data-actions [data-confirm-delete] { border: 1px solid #b83d28; background: #b83d28; color: #fff; }
+.delete-data-actions [data-confirm-delete]:disabled { cursor: not-allowed; opacity: .45; }
 .more-active { color: #24558b; }
 .more-active::before { background: #24558b; }
 @media (max-width: 540px) { .profile-screen { min-height: 100vh; box-shadow: none; } }
-@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .auto-lock-card, .password-row { margin-inline: 16px; } .auto-lock-card { grid-template-columns: 49px 1fr; padding-inline: 17px; } .auto-lock-card > img { width: 43px; height: 43px; } }
+@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .auto-lock-card, .password-row, .danger-zone { margin-inline: 16px; } .auto-lock-card { grid-template-columns: 49px 1fr; padding-inline: 17px; } .auto-lock-card > img { width: 43px; height: 43px; } }
 
 /* Change Password (S12) */
 .pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
