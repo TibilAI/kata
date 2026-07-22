@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fbf8f4">
     <title>KATA | Before You Begin</title>
-    <link rel="stylesheet" href="../style/common.css?v=10">
+    <link rel="stylesheet" href="../style/common.css?v=11">
     <script src="../script/access-guard.js?v=2"></script>
   </head>
   <body class="kata-page">
@@ -60,16 +60,6 @@
             </div>
           </fieldset>
 
-          <fieldset class="analytics-consent-card" id="section-analytics">
-            <legend>Analytics &amp; privacy</legend>
-            <p>Help improve KATA with usage analytics.</p>
-            <div class="consent-options">
-              <label class="check-option"><input type="radio" name="analyticsConsent" value="yes" required><span>Yes, allow usage analytics</span></label>
-              <label class="check-option"><input type="radio" name="analyticsConsent" value="no"><span>No, do not send analytics</span></label>
-            </div>
-            <label class="demographic-consent"><input id="demographic-sharing" name="demographicSharing" type="checkbox" value="yes"> <span>Also share my gender, birth month, and birth year for aggregate product analysis.</span></label>
-          </fieldset>
-
           <fieldset class="choice-group" id="section-timing">
             <legend>When will I do my Daily Kata?</legend>
             <label class="check-option">
@@ -102,6 +92,12 @@
             </div>
           </section>
 
+          <fieldset class="analytics-consent-card" id="section-analytics">
+            <legend>Analytics &amp; privacy</legend>
+            <p>KATA collects usage analytics to improve experience.</p>
+            <label class="demographic-consent"><input id="demographic-sharing" name="demographicSharing" type="checkbox" value="yes" checked> <span>Share my gender, birth month and birth year for aggregate product analysis.</span></label>
+          </fieldset>
+
           <p class="commitment-note">This commitment is for my own sake.</p>
           <p id="form-message" class="form-message" aria-live="polite"></p>
           <button class="continue-button" type="submit"><span data-profile-submit-label>Continue</span> <span aria-hidden="true">→</span></button>
@@ -113,6 +109,6 @@
       </section>
     </main>
     <script src="../script/clarity.js?v=3"></script>
-    <script src="../script/common.js?v=15"></script>
+    <script src="../script/common.js?v=16"></script>
   </body>
 </html>

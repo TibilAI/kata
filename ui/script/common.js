@@ -71,9 +71,7 @@
     form.elements.gender.value = saved.gender || '';
     form.elements.birthMonth.value = saved.birthMonth || '';
     birthYear.value = saved.birthYear || '';
-    const consentChoice = form.querySelector(`[name="analyticsConsent"][value="${saved.analyticsConsent || (localStorage.getItem('kata.analytics.generalConsent') === 'granted' ? 'yes' : 'no')}"]`);
-    if (consentChoice) consentChoice.checked = true;
-    demographicSharing.checked = saved.demographicSharing === true || localStorage.getItem('kata.analytics.demographicConsent') === 'granted';
+    demographicSharing.checked = saved.demographicSharing !== false;
     const dailyChoice = form.querySelector(`[name="dailyKataTime"][value="${CSS.escape(saved.dailyKataTime || '')}"]`);
     if (dailyChoice) dailyChoice.checked = true;
     otherTime.value = saved.otherTime || '';
@@ -84,14 +82,6 @@
   otherTime.addEventListener('focus', () => {
     form.querySelector('[name="dailyKataTime"][value="Other"]').checked = true;
   });
-  const syncDemographicControl = () => {
-    const consent = form.querySelector('[name="analyticsConsent"]:checked')?.value === 'yes';
-    demographicSharing.disabled = !consent;
-    if (!consent) demographicSharing.checked = false;
-  };
-  form.querySelectorAll('[name="analyticsConsent"]').forEach((input) => input.addEventListener('change', syncDemographicControl));
-  syncDemographicControl();
-
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     message.textContent = '';
@@ -99,7 +89,7 @@
 
     const currentYear = new Date().getFullYear();
     const validBirthYear = /^\d{4}$/.test(String(data.birthYear || '')) && Number(data.birthYear) >= 1900 && Number(data.birthYear) <= currentYear;
-    if (!data.name?.trim() || !data.workType?.trim() || !data.gender || !data.birthMonth || !validBirthYear || !data.analyticsConsent || !data.dailyKataTime || !data.commitment) {
+    if (!data.name?.trim() || !data.workType?.trim() || !data.gender || !data.birthMonth || !validBirthYear || !data.dailyKataTime || !data.commitment) {
       message.textContent = 'Please complete each section to continue.';
       window.KataAnalytics?.track('profile_setup_validation_failed');
       return;
@@ -115,11 +105,12 @@
     data.workType = data.workType.trim();
     data.otherTime = (data.otherTime || '').trim();
     data.birthYear = String(data.birthYear);
-    data.demographicSharing = data.analyticsConsent === 'yes' && form.elements.demographicSharing.checked;
+    data.analyticsConsent = 'yes';
+    data.demographicSharing = form.elements.demographicSharing.checked;
     data.startedAt = saved?.startedAt || saved?.updatedAt || new Date().toISOString();
     data.updatedAt = new Date().toISOString();
     localStorage.setItem(storageKey, JSON.stringify(data));
-    window.KataAnalytics?.updateConsent(data.analyticsConsent === 'yes', data.demographicSharing);
+    window.KataAnalytics?.updateConsent(true, data.demographicSharing);
     window.KataAnalytics?.track(profileMode ? 'profile_updated' : 'profile_setup_completed');
     message.style.color = '#357047';
     message.textContent = profileMode ? 'Your profile has been saved.' : 'Your KATA practice has been saved.';
@@ -412,11 +403,18 @@
   set('[data-profile-gender]', profile.gender);
   set('[data-profile-birth-month]', profile.birthMonth);
   set('[data-profile-birth-year]', profile.birthYear);
-  const analyticsStatus = document.querySelector('[data-analytics-status]');
-  if (analyticsStatus) {
-    const usage = profile.analyticsConsent === 'yes' || localStorage.getItem('kata.analytics.generalConsent') === 'granted';
-    const demographics = profile.demographicSharing === true || localStorage.getItem('kata.analytics.demographicConsent') === 'granted';
-    analyticsStatus.textContent = usage ? (demographics ? 'Usage analytics and demographics shared' : 'Usage analytics only') : 'Usage analytics off';
+  const demographicInput = document.querySelector('[data-profile-demographic-sharing]');
+  const analyticsMessage = document.querySelector('[data-profile-analytics-message]');
+  if (demographicInput) {
+    demographicInput.checked = profile.demographicSharing !== false;
+    demographicInput.addEventListener('change', () => {
+      profile.analyticsConsent = 'yes';
+      profile.demographicSharing = demographicInput.checked;
+      profile.updatedAt = new Date().toISOString();
+      localStorage.setItem('kata.setup', JSON.stringify(profile));
+      window.KataAnalytics?.updateConsent(true, profile.demographicSharing);
+      if (analyticsMessage) analyticsMessage.textContent = profile.demographicSharing ? 'Demographic sharing is on.' : 'Demographic sharing is off.';
+    });
   }
   const timing = profile.dailyKataTime === 'Other' ? (profile.otherTime ? `Other: ${profile.otherTime}` : 'Other') : profile.dailyKataTime;
   set('[data-profile-timing]', timing);

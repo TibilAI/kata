@@ -117,14 +117,11 @@ body {
 .demographic-group { margin: 0 0 48px; padding: 25px 25px 1px; border: 1px solid var(--card-line); border-radius: 12px; }
 .demographic-group legend { padding: 0 8px; font-size: 19px; line-height: 1.3; }
 .demographic-group .field-group { margin-bottom: 32px; }
-.analytics-consent-card { margin: 0 0 48px; padding: 25px; border: 1px solid var(--card-line); border-radius: 12px; }
+.analytics-consent-card { margin: 20px 0 48px; padding: 25px; border: 1px solid var(--card-line); border-radius: 12px; }
 .analytics-consent-card legend { padding: 0 8px; font-size: 19px; line-height: 1.3; }
 .analytics-consent-card > p { margin: 0 0 18px; color: var(--muted); font-size: 16px; line-height: 1.45; }
-.consent-options { margin-bottom: 19px; }
-.analytics-consent-card .check-option { align-items: flex-start; font-size: 16px; line-height: 1.35; }
-.demographic-consent { display: flex; gap: 12px; align-items: flex-start; padding-top: 17px; border-top: 1px solid #eaded4; color: #4f4e4d; font-size: 15px; line-height: 1.45; }
+.demographic-consent { display: flex; gap: 12px; align-items: flex-start; color: #4f4e4d; font-size: 15px; line-height: 1.45; }
 .demographic-consent input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
-.demographic-consent:has(input:disabled) { color: var(--muted); }
 
 .choice-group { margin: 0 0 48px; padding: 0; border: 0; }
 .choice-group legend { margin-bottom: 18px; }
@@ -211,6 +208,10 @@ body {
 .profile-commitment h2 { margin: 2px 0 16px; }
 .profile-commitment p { margin: 0 0 14px; font-size: 16px; }
 .profile-commitment strong { color: #bd461f; font-size: 16px; }
+.profile-analytics-card { margin-top: 20px; padding: 23px 18px; border: 1px solid #eaded4; border-radius: 13px; }
+.profile-analytics-card h2 { margin: 0 0 11px; font-size: 18px; }
+.profile-analytics-card > p { margin: 0 0 17px; color: var(--muted); font-size: 16px; line-height: 1.4; }
+.profile-analytics-card .profile-analytics-message { min-height: 17px; margin: 10px 0 0; color: #357047; font-size: 13px; }
 .auto-lock-card { display: grid; grid-template-columns: 58px 1fr; gap: 15px; align-items: start; margin: 0 22px 18px; padding: 20px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); }
 .auto-lock-card > img { width: 50px; height: 50px; object-fit: contain; }
 .auto-lock-card h2 { margin: 3px 0 11px; font-size: 18px; }
@@ -224,16 +225,10 @@ body {
 .password-row { display: grid; grid-template-columns: 74px 1fr 26px; align-items: center; gap: 16px; margin: 0 22px 30px; padding: 17px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); color: var(--ink); font-size: 18px; font-weight: 600; text-decoration: none; }
 .password-row img { width: 55px; height: 55px; object-fit: contain; }
 .password-row img:last-child { width: 22px; height: 22px; }
-.analytics-row { display: grid; grid-template-columns: 74px 1fr 26px; align-items: center; gap: 16px; margin: 0 22px 30px; padding: 17px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); color: var(--ink); text-decoration: none; }
-.analytics-row > img:first-child { width: 55px; height: 55px; object-fit: contain; }
-.analytics-row > img:last-child { width: 22px; height: 22px; }
-.analytics-row strong, .analytics-row small { display: block; }
-.analytics-row strong { font-size: 18px; }
-.analytics-row small { margin-top: 5px; color: var(--muted); font-size: 14px; }
 .more-active { color: #24558b; }
 .more-active::before { background: #24558b; }
 @media (max-width: 540px) { .profile-screen { min-height: 100vh; box-shadow: none; } }
-@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .auto-lock-card, .password-row, .analytics-row { margin-inline: 16px; } .auto-lock-card { grid-template-columns: 49px 1fr; padding-inline: 17px; } .auto-lock-card > img { width: 43px; height: 43px; } }
+@media (max-width: 410px) { .profile-card { margin-inline: 16px; padding-inline: 18px; } .profile-row { grid-template-columns: 67px 1fr; gap: 11px; } .profile-art { width: 62px; height: 62px; } .auto-lock-card, .password-row { margin-inline: 16px; } .auto-lock-card { grid-template-columns: 49px 1fr; padding-inline: 17px; } .auto-lock-card > img { width: 43px; height: 43px; } }
 
 /* Change Password (S12) */
 .pin-screen { width: min(100%, 500px); min-height: min(100vh - 48px, 1000px); display: flex; flex-direction: column; background: radial-gradient(circle at 50% 35%, #fff 0%, var(--paper) 68%, #f8f4ee 100%); box-shadow: 0 16px 40px rgb(57 41 27 / 12%); }
