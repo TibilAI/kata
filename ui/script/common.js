@@ -5,14 +5,14 @@
   const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
   const validProfile = profile && hasText(profile.name) && hasText(profile.workType) && hasText(profile.dailyKataTime) && hasText(profile.commitment) && (profile.dailyKataTime !== 'Other' || hasText(profile.otherTime));
   if (!validProfile) {
-    window.location.replace('s01-kata.html');
+    window.location.replace('html/s01-kata.html');
     return;
   }
   if (!localStorage.getItem('kata.security.pin')) {
-    window.location.replace('s12-change-password.html?mode=initial');
+    window.location.replace('html/s12-change-password.html?mode=initial');
     return;
   }
-  window.location.replace('s13-enter-password.html');
+  window.location.replace('html/s13-enter-password.html');
 })();
 
 (() => {
@@ -288,8 +288,15 @@
 (() => {
   const about = document.querySelector('.about-screen');
   if (!about) return;
+  const formatReleaseDate = (value) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC', timeZoneName: 'short'
+    }).format(date);
+  };
   const render = (info) => {
-    const values = { description: info.description, product: info.product, version: info.version, release: info.releaseDate, builder: info.builtBy };
+    const values = { description: info.description, product: info.product, version: info.version, release: formatReleaseDate(info.releaseDate), builder: info.builtBy };
     Object.entries(values).forEach(([key, value]) => { const element = document.querySelector(`[data-about-${key}]`); if (element && value) element.textContent = value; });
   };
   fetch('../data/app-info.json').then((response) => response.ok ? response.json() : Promise.reject()).then(render).catch(() => {});
