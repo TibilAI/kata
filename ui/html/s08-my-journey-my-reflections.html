@@ -1,9 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="../">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#fbf8f4">
+    <link rel="manifest" href="../data/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="../style/icons/kata-app-icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="color-scheme" content="light">
     <title>KATA | My Reflections</title>
     <link rel="stylesheet" href="../style/common.css?v=13">
@@ -19,7 +23,7 @@
             <p>Your thoughts &amp; ideas. Reflect to grow.</p>
             <span class="journey-rule" aria-hidden="true"></span>
           </div>
-          <button class="more-button" type="button" aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
+          <button class="more-button" type="button" data-header-more aria-label="More options"><img class="header-icon" src="../style/icons/icon-more.png" alt=""></button>
         </header>
 
         <section class="reflections-toolbar" aria-label="Reflection controls">
@@ -53,7 +57,8 @@
       </form>
     </dialog>
     <script src="../script/clarity.js?v=4"></script>
-    <script src="../script/common.js?v=18"></script>
+    <script src="../script/common.js?v=19"></script>
+    <script src="../script/pwa.js?v=1"></script>
     <script src="../script/idle-lock.js"></script>
   </body>
 </html>

@@ -1,0 +1,25 @@
+{
+  "name": "KATA — Master Your Craft",
+  "short_name": "KATA",
+  "description": "A private practice companion for mastering your craft.",
+  "id": "../index.html",
+  "start_url": "../index.html",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#fcfaf7",
+  "theme_color": "#fbf8f4",
+  "icons": [
+    {
+      "src": "../style/icons/kata-app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../style/icons/kata-app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

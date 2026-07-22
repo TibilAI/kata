@@ -33,6 +33,13 @@ const releaseInfo = {
 
 writeFileSync(resolve(repositoryRoot, 'ui/data/app-info.json'), `${JSON.stringify(releaseInfo, null, 2)}\n`);
 
+const serviceWorkerPath = resolve(repositoryRoot, 'ui/sw.js');
+const serviceWorker = readFileSync(serviceWorkerPath, 'utf8');
+writeFileSync(
+  serviceWorkerPath,
+  serviceWorker.replace(/const CACHE_VERSION = '[^']+';/, `const CACHE_VERSION = '${version}';`)
+);
+
 if (process.env.GITHUB_OUTPUT) {
   appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\ntag=${tag}\n`);
 }

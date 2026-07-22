@@ -50,6 +50,9 @@ body {
 .app-entry-screen img { width: min(65vw, 260px); height: auto; }
 .app-entry-spinner { width: 32px; height: 32px; border: 3px solid #e3eaf3; border-top-color: #c95331; border-radius: 50%; animation: flow-spin .85s linear infinite; }
 .app-entry-screen p { margin: 0; color: var(--muted); font-size: 16px; }
+.pwa-update-notice { position: fixed; z-index: 30; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 14px; max-width: min(92vw, 360px); padding: 13px 14px 13px 17px; border: 1px solid #dfd5cc; border-radius: 12px; background: #fffdfb; box-shadow: 0 9px 24px rgb(37 31 26 / 20%); color: var(--ink); font-size: 14px; }
+.pwa-update-notice button { min-height: 34px; padding: 7px 12px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font: 700 13px Avenir Next, Avenir, sans-serif; cursor: pointer; }
+.pwa-update-notice button:focus-visible { outline: 3px solid #24558b; outline-offset: 2px; }
 @media (max-width: 540px) { .app-entry-screen { min-height: 100vh; box-shadow: none; } }
 
 .brand { text-align: center; }

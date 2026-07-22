@@ -345,7 +345,7 @@
 })();
 
 (() => {
-  const triggers = document.querySelectorAll('[data-bottom-more]');
+  const triggers = document.querySelectorAll('[data-bottom-more], [data-header-more]');
   if (!triggers.length) return;
   const safeParse = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key) || ''); } catch (_) { return fallback; } };
   const recordsFor = (prefix) => Object.keys(localStorage).filter((key) => key.startsWith(prefix)).sort().map((key) => safeParse(key, null)).filter(Boolean);
@@ -408,7 +408,9 @@
       if (wasOpen) return;
       menu.hidden = false;
       const bounds = trigger.getBoundingClientRect();
-      menu.style.top = `${Math.max(8, bounds.top - menu.offsetHeight - 8)}px`;
+      const spaceAbove = bounds.top - menu.offsetHeight - 8;
+      const spaceBelow = bounds.bottom + 8;
+      menu.style.top = `${spaceAbove >= 8 ? spaceAbove : Math.min(spaceBelow, window.innerHeight - menu.offsetHeight - 8)}px`;
       menu.style.left = `${Math.max(8, bounds.right - menu.offsetWidth)}px`;
       trigger.setAttribute('aria-expanded', 'true');
       window.KataAnalytics?.track('more_menu_opened');
