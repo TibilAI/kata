@@ -141,6 +141,7 @@ body {
 .analytics-consent-card > p { margin: 0 0 18px; color: var(--muted); font-size: 16px; line-height: 1.45; }
 .demographic-consent { display: flex; gap: 12px; align-items: flex-start; color: #4f4e4d; font-size: 15px; line-height: 1.45; }
 .demographic-consent input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--accent); }
+.privacy-data-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #eaded4; color: var(--muted); font-size: 14px; line-height: 1.5; }
 
 .choice-group { margin: 0 0 48px; padding: 0; border: 0; }
 .choice-group legend { margin-bottom: 18px; }
@@ -230,6 +231,7 @@ body {
 .profile-analytics-card { margin-top: 20px; padding: 23px 18px; border: 1px solid #eaded4; border-radius: 13px; }
 .profile-analytics-card h2 { margin: 0 0 11px; font-size: 18px; }
 .profile-analytics-card > p { margin: 0 0 17px; color: var(--muted); font-size: 16px; line-height: 1.4; }
+.profile-analytics-card .privacy-data-note { margin: 16px 0 0; padding-top: 14px; font-size: 14px; line-height: 1.5; }
 .profile-analytics-card .profile-analytics-message { min-height: 17px; margin: 10px 0 0; color: #357047; font-size: 13px; }
 .auto-lock-card { display: grid; grid-template-columns: 58px 1fr; gap: 15px; align-items: start; margin: 0 22px 18px; padding: 20px 22px; border: 1px solid #eee4dc; border-radius: 18px; box-shadow: 0 8px 16px rgb(74 56 43 / 6%); }
 .auto-lock-card > img { width: 50px; height: 50px; object-fit: contain; }

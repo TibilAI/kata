@@ -7,7 +7,7 @@ const APP_SHELL = [
   './index.html',
   './data/manifest.webmanifest',
   './data/app-info.json',
-  './style/common.css?v=14',
+  './style/common.css?v=15',
   './style/icons/kata-app-icon-192.png',
   './style/icons/kata-app-icon-512.png',
   './script/pwa.js?v=2',
